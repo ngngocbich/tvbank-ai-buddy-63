@@ -4,10 +4,11 @@ import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Send, Bot, User, Settings, MessageCircle, TrendingUp, Users, CreditCard } from 'lucide-react';
+import { Send, Bot, User, Settings, MessageCircle, TrendingUp, Users, CreditCard, LogOut } from 'lucide-react';
 import chatbotAvatar from '@/assets/chatbot-avatar.jpg';
 import Header from '@/components/Header';
 import AIIntegration, { generateChatResponse } from '@/components/AIIntegration';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Message {
   id: string;
@@ -306,12 +307,27 @@ const userTypes = [
 ];
 
 export default function ChatInterface() {
+  const { user, profile, signOut } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [selectedUserType, setSelectedUserType] = useState<string>('customer');
   const [isTyping, setIsTyping] = useState(false);
   const [showAIConfig, setShowAIConfig] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Map user role to chat type
+  const userRoleMapping = {
+    'customer': 'customer',
+    'consultant': 'credit-officer',
+    'branch_manager': 'manager'
+  };
+
+  // Set user type based on profile role
+  useEffect(() => {
+    if (profile?.role) {
+      setSelectedUserType(userRoleMapping[profile.role as keyof typeof userRoleMapping] || 'customer');
+    }
+  }, [profile]);
 
   const filteredScenarios = chatScenarios.filter(scenario => 
     scenario.userType === selectedUserType
@@ -388,27 +404,39 @@ export default function ChatInterface() {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Sidebar - User Type Selection & Scenarios */}
           <div className="lg:col-span-1 space-y-6">
-            {/* User Type Selection */}
+            {/* User Profile */}
             <Card className="p-6 shadow-lg border-banking-blue/20">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <Settings className="w-5 h-5 text-banking-blue" />
-                Chọn vai trò người dùng
+                <User className="w-5 h-5 text-banking-blue" />
+                Thông tin người dùng
               </h3>
-              <Select value={selectedUserType} onValueChange={setSelectedUserType}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Chọn vai trò" />
-                </SelectTrigger>
-                <SelectContent>
-                  {userTypes.map((type) => (
-                    <SelectItem key={type.value} value={type.value}>
-                      <div className="flex items-center gap-2">
-                        {type.icon}
-                        {type.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-sm font-medium">{profile?.full_name || user?.email}</p>
+                  <p className="text-xs text-muted-foreground">{user?.email}</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="text-xs">
+                    {profile?.role === 'customer' && 'Khách hàng'}
+                    {profile?.role === 'consultant' && 'Chuyên viên tư vấn'}
+                    {profile?.role === 'branch_manager' && 'Quản lý chi nhánh'}
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={signOut}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <LogOut className="w-4 h-4 mr-1" />
+                    Đăng xuất
+                  </Button>
+                </div>
+                {profile?.branch_id && (
+                  <p className="text-xs text-muted-foreground">
+                    Chi nhánh: {profile.branch_id}
+                  </p>
+                )}
+              </div>
             </Card>
 
             {/* Demo Scenarios */}
@@ -466,7 +494,9 @@ export default function ChatInterface() {
                   <div>
                     <h3 className="font-semibold">TV Bank Assistant</h3>
                     <p className="text-sm text-white/80">
-                      {userTypes.find(type => type.value === selectedUserType)?.label} Support
+                      {profile?.role === 'customer' && 'Hỗ trợ khách hàng'}
+                      {profile?.role === 'consultant' && 'Công cụ chuyên viên tư vấn'}
+                      {profile?.role === 'branch_manager' && 'Dashboard quản lý'}
                     </p>
                   </div>
                 </div>
