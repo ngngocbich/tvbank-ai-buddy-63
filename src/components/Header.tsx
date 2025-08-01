@@ -24,7 +24,7 @@ export default function Header({ onShowAIConfig }: HeaderProps) {
                 TV Bank AI Assistant
               </h1>
               <p className="text-sm text-muted-foreground">
-                Chatbot thông minh hỗ trợ ngân hàng
+                Chatbot thông minh
               </p>
             </div>
           </div>
