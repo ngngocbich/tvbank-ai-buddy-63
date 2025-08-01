@@ -4,7 +4,8 @@ import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Send, Bot, User, Settings, MessageCircle, TrendingUp, Users, CreditCard, LogOut } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Send, Bot, User, Settings, MessageCircle, TrendingUp, Users, CreditCard, LogOut, Menu } from 'lucide-react';
 import chatbotAvatar from '@/assets/chatbot-avatar.jpg';
 import Header from '@/components/Header';
 import AIIntegration, { generateChatResponse } from '@/components/AIIntegration';
@@ -313,6 +314,7 @@ export default function ChatInterface() {
   const [selectedUserType, setSelectedUserType] = useState<string>('customer');
   const [isTyping, setIsTyping] = useState(false);
   const [showAIConfig, setShowAIConfig] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Map user role to chat type
@@ -395,69 +397,101 @@ export default function ChatInterface() {
     }
   };
 
+  // Sidebar content component for reuse
+  const SidebarContent = () => (
+    <div className="space-y-6 p-4">
+      {/* User Profile */}
+      <Card className="p-4 shadow-lg border-banking-blue/20">
+        <h3 className="font-semibold mb-4 flex items-center gap-2">
+          <User className="w-5 h-5 text-banking-blue" />
+          Thông tin người dùng
+        </h3>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{profile?.full_name || user?.email}</p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={signOut}
+              className="text-destructive hover:text-destructive flex-shrink-0"
+            >
+              <LogOut className="w-4 h-4 mr-1" />
+              Đăng xuất
+            </Button>
+          </div>
+        </div>
+      </Card>
+
+      {/* Demo Scenarios */}
+      <Card className="p-4 shadow-lg border-banking-blue/20">
+        <h3 className="font-semibold mb-4 flex items-center gap-2">
+          <MessageCircle className="w-5 h-5 text-banking-blue" />
+          Hỗ trợ đề xuất
+        </h3>
+        <div className="space-y-3">
+          {filteredScenarios.map((scenario) => (
+            <Button
+              key={scenario.id}
+              variant="chat"
+              size="sm"
+              className="w-full justify-start text-left h-auto p-3"
+              onClick={() => {
+                handleScenarioDemo(scenario);
+                setSidebarOpen(false); // Close mobile sidebar after selection
+              }}
+            >
+              <div className="flex items-start gap-3">
+                {scenario.icon}
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-sm truncate">{scenario.title}</div>
+                  <div className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed break-words">
+                    {scenario.description}
+                  </div>
+                </div>
+              </div>
+            </Button>
+          ))}
+        </div>
+      </Card>
+
+      {/* Settings */}
+      <Card className="p-4 shadow-lg border-banking-blue/20">
+        <Button
+          variant="ghost"
+          className="w-full justify-start"
+          onClick={() => {/* Add settings handler */}}
+        >
+          <Settings className="w-4 h-4 mr-2" />
+          Cài đặt
+        </Button>
+      </Card>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-banking-blue/5">
       <Header onShowAIConfig={() => setShowAIConfig(true)} />
       
       <div className="container mx-auto p-4 max-w-6xl">
-
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Sidebar - User Type Selection & Scenarios */}
-          <div className="lg:col-span-1 space-y-6">
-            {/* User Profile */}
-            <Card className="p-6 shadow-lg border-banking-blue/20">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <User className="w-5 h-5 text-banking-blue" />
-                Thông tin người dùng
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{profile?.full_name || user?.email}</p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={signOut}
-                    className="text-destructive hover:text-destructive flex-shrink-0"
-                  >
-                    <LogOut className="w-4 h-4 mr-1" />
-                    Đăng xuất
-                  </Button>
-                </div>
-              </div>
-            </Card>
-
-            {/* Demo Scenarios */}
-            <Card className="p-6 shadow-lg border-banking-blue/20">
-              <h3 className="font-semibold mb-4 flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-banking-blue" />
-                Kịch bản demo
-              </h3>
-              <div className="space-y-3">
-                {filteredScenarios.map((scenario) => (
-                  <Button
-                    key={scenario.id}
-                    variant="chat"
-                    size="sm"
-                    className="w-full justify-start text-left h-auto p-3"
-                    onClick={() => handleScenarioDemo(scenario)}
-                  >
-                    <div className="flex items-start gap-3">
-                      {scenario.icon}
-                      <div>
-                        <div className="font-medium text-sm">{scenario.title}</div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {scenario.description}
-                        </div>
-                      </div>
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </Card>
-
+          {/* Desktop Sidebar */}
+          <div className="hidden lg:block lg:col-span-1">
+            <SidebarContent />
           </div>
+
+          {/* Mobile Sidebar */}
+          <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+            <SheetTrigger asChild className="lg:hidden">
+              <Button variant="outline" size="sm" className="fixed top-20 left-4 z-50">
+                <Menu className="w-4 h-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-80 p-0">
+              <SidebarContent />
+            </SheetContent>
+          </Sheet>
 
           {/* Chat Interface */}
           <div className="lg:col-span-2">
@@ -469,7 +503,7 @@ export default function ChatInterface() {
                     <Bot className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">TV Bank Assistant</h3>
+                    <h3 className="font-semibold">TV Bank AI Assistant</h3>
                     <p className="text-sm text-white/80">
                       {profile?.role === 'customer' && 'Hỗ trợ khách hàng'}
                       {profile?.role === 'consultant' && 'Công cụ chuyên viên tư vấn'}
@@ -489,7 +523,7 @@ export default function ChatInterface() {
                       className="w-16 h-16 mx-auto rounded-full mb-4 shadow-lg"
                     />
                     <p>Chào mừng đến với TV Bank AI Assistant!</p>
-                    <p className="text-sm mt-2">Chọn kịch bản demo hoặc gửi tin nhắn để bắt đầu.</p>
+                    <p className="text-sm mt-2">Chọn hỗ trợ đề xuất hoặc gửi tin nhắn để bắt đầu.</p>
                   </div>
                 )}
 
@@ -515,7 +549,7 @@ export default function ChatInterface() {
                           ? 'bg-banking-blue text-white rounded-br-none'
                           : 'bg-white border border-banking-blue/20 rounded-bl-none'
                       }`}>
-                        <div className="whitespace-pre-wrap text-sm">
+                        <div className="whitespace-pre-wrap text-sm break-words">
                           {message.content}
                         </div>
                         <div className={`text-xs mt-1 ${
@@ -555,7 +589,7 @@ export default function ChatInterface() {
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Nhập tin nhắn của bạn..."
+                    placeholder="Nhập nội dung cần hỗ trợ..."
                     className="flex-1 resize-none border border-banking-blue/20 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-banking-blue/20 min-h-[44px] max-h-32"
                     rows={1}
                   />
@@ -574,7 +608,6 @@ export default function ChatInterface() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }
