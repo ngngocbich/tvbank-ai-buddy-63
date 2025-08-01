@@ -224,7 +224,7 @@ const chatScenarios: ChatScenario[] = [
     description: 'Tổng quan hiệu suất và KPI của chi nhánh',
     initialMessage: 'Tôi cần xem báo cáo hiệu suất tháng này của chi nhánh.',
     responses: [
-      '📊 **Báo cáo hiệu suất nchi nhánh - Tháng 07/2025:**',
+      '📊 **Báo cáo hiệu suất của chi nhánh - Tháng 07/2025:**',
       '💰 **Tài chính:**\n- Tổng huy động: 485 tỷ (đạt 97% kế hoạch)\n- Tổng cho vay: 392 tỷ (đạt 104% kế hoạch)\n- Lợi nhuận: 15.2 tỷ (tăng 12% so với cùng kỳ)\n- Tỷ trọng cho vay hộ gia đình: 68% tổng dư nợ',
       '👥 **Khách hàng:**\n- Khách hàng mới: 234 (đạt 117% chỉ tiêu)\n- Tỷ lệ hài lòng: 4.6/5\n- Số lượng giao dịch: 12,458 (tăng 8%)\n- Chương trình "Tài chính xanh": 56 hộ vay ưu đãi (đạt 112% chỉ tiêu)',
       '⚡ **Hiệu suất:**\n- Thời gian xử lý hồ sơ vay: 3.2 ngày (giảm 0.5 ngày)\n- Tỷ lệ nợ xấu: 0.8% (trong ngưỡng kiểm soát)\n- ROA: 1.8%',
