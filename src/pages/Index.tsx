@@ -30,7 +30,7 @@ const Index = () => {
       <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
         <div className="text-center space-y-6">
           <div className="mx-auto w-20 h-20 bg-gradient-to-r from-banking-blue to-banking-light rounded-full flex items-center justify-center">
-            <span className="text-3xl font-bold text-white">TB</span>
+            <span className="text-3xl font-bold text-white">TV</span>
           </div>
           <div className="space-y-2">
             <h1 className="text-3xl font-bold text-banking-dark">TV Bank</h1>
