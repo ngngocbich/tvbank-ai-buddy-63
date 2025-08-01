@@ -456,17 +456,7 @@ export default function ChatInterface() {
         </div>
       </Card>
 
-      {/* Settings */}
-      <Card className="p-4 shadow-lg border-banking-blue/20">
-        <Button
-          variant="ghost"
-          className="w-full justify-start"
-          onClick={() => {/* Add settings handler */}}
-        >
-          <Settings className="w-4 h-4 mr-2" />
-          Cài đặt
-        </Button>
-      </Card>
+    
     </div>
   );
 
