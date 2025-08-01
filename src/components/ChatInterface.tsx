@@ -254,7 +254,7 @@ const chatScenarios: ChatScenario[] = [
     userType: 'manager',
     icon: <TrendingUp className="w-4 h-4" />,
     description: 'Báo cáo tài chính và phân tích dòng tiền',
-    initialMessage: 'Cần xem dashboard tài chính tổng thể của ngân hàng trong Q4/2024.',
+    initialMessage: 'Cần xem dashboard tài chính tổng thể của ngân hàng trong Q1/2025.',
     responses: [
       '📈 **Dashboard Tài chính Q4/2024:**',
       '💰 **Tổng quan tài chính:**\n- Tổng tài sản: 125,000 tỷ VND (tăng 8% so với Q3)\n- Dư nợ tín dụng: 89,500 tỷ VND\n- Huy động vốn: 98,200 tỷ VND\n- Vốn chủ sở hữu: 12,800 tỷ VND',
@@ -273,7 +273,7 @@ const chatScenarios: ChatScenario[] = [
     description: 'Báo cáo và kiểm soát các loại rủi ro',
     initialMessage: 'Tôi cần báo cáo tổng thể về tình hình quản lý rủi ro hiện tại.',
     responses: [
-      '⚠️ **Báo cáo Quản lý Rủi ro - Tháng 12/2024:**',
+      '⚠️ **Báo cáo Quản lý Rủi ro - Tháng 6/2025:**',
       '🔴 **Rủi ro tín dụng:**\n- NPL: 1.1% (trong giới hạn 2%)\n- Top 10 khách hàng lớn: 18% vốn chủ sở hữu\n- Tập trung ngành: Bất động sản 35%, Sản xuất 28%\n- Stress test: Vượt qua kịch bản khó khăn',
       '🟡 **Rủi ro thị trường:**\n- VaR (95%, 1 ngày): 2.8 tỷ VND\n- Duration Gap: +0.5 năm (chấp nhận được)\n- FX Exposure: $12M (hedge 80%)\n- Interest Rate Risk: Trong giới hạn',
       '💧 **Rủi ro thanh khoản:**\n- Stress test thanh khoản: PASS\n- Funding concentration: Phân tán tốt\n- Maturity mismatch: Kiểm soát\n- Emergency funding: 15% tổng TS',
