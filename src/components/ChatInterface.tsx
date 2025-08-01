@@ -456,7 +456,6 @@ export default function ChatInterface() {
         </div>
       </Card>
 
-    
     </div>
   );
 
