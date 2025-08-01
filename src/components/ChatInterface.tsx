@@ -411,31 +411,20 @@ export default function ChatInterface() {
                 Thông tin người dùng
               </h3>
               <div className="space-y-3">
-                <div>
-                  <p className="text-sm font-medium">{profile?.full_name || user?.email}</p>
-                  <p className="text-xs text-muted-foreground">{user?.email}</p>
-                </div>
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="text-xs">
-                    {profile?.role === 'customer' && 'Khách hàng'}
-                    {profile?.role === 'consultant' && 'Chuyên viên tư vấn'}
-                    {profile?.role === 'branch_manager' && 'Quản lý chi nhánh'}
-                  </Badge>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{profile?.full_name || user?.email}</p>
+                  </div>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={signOut}
-                    className="text-destructive hover:text-destructive"
+                    className="text-destructive hover:text-destructive flex-shrink-0"
                   >
                     <LogOut className="w-4 h-4 mr-1" />
                     Đăng xuất
                   </Button>
                 </div>
-                {profile?.branch_id && (
-                  <p className="text-xs text-muted-foreground">
-                    Chi nhánh: {profile.branch_id}
-                  </p>
-                )}
               </div>
             </Card>
 
@@ -468,18 +457,6 @@ export default function ChatInterface() {
               </div>
             </Card>
 
-            {/* API Integration Info */}
-            <Card className="p-6 shadow-lg border-banking-blue/20 bg-gradient-to-br from-banking-blue/5 to-banking-light/5">
-              <h3 className="font-semibold mb-3 text-banking-blue">Tích hợp AI</h3>
-              <div className="text-sm text-muted-foreground space-y-2">
-                <p>• Sẵn sàng tích hợp ChatGPT API</p>
-                <p>• Hỗ trợ Google Gemini API</p>
-                <p>• Training model theo yêu cầu</p>
-                <Badge variant="outline" className="mt-3">
-                  API Ready
-                </Badge>
-              </div>
-            </Card>
           </div>
 
           {/* Chat Interface */}
@@ -598,15 +575,6 @@ export default function ChatInterface() {
         </div>
       </div>
 
-      {/* AI Configuration Dialog */}
-      <Dialog open={showAIConfig} onOpenChange={setShowAIConfig}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Cấu hình AI Engine</DialogTitle>
-          </DialogHeader>
-          <AIIntegration />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

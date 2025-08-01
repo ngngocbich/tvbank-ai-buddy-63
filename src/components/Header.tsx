@@ -31,20 +31,7 @@ export default function Header({ onShowAIConfig }: HeaderProps) {
 
           {/* Navigation */}
           <div className="flex items-center gap-4">
-            <Button
-              variant="chat"
-              size="sm"
-              onClick={onShowAIConfig}
-              className="flex items-center gap-2"
-            >
-              <Cpu className="w-4 h-4" />
-              Cấu hình AI
-            </Button>
-            
-            <div className="flex items-center gap-2 px-3 py-1 bg-banking-blue/5 rounded-lg">
-              <Bot className="w-4 h-4 text-banking-blue" />
-              <span className="text-sm font-medium text-banking-blue">Demo Mode</span>
-            </div>
+            {/* Navigation content removed as requested */}
           </div>
         </div>
       </div>
