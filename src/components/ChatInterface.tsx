@@ -55,27 +55,28 @@ const chatScenarios: ChatScenario[] = [
     description: 'Tư vấn các gói vay và thủ tục cần thiết',
     initialMessage: 'Tôi muốn tìm hiểu về các gói vay cá nhân của ngân hàng.',
     responses: [
-      'TV Bank có nhiều gói vay phù hợp với nhu cầu của bạn:',
-      '📋 **Vay tiêu dùng không tài sản đảm bảo:**\n- Hạn mức: 50-500 triệu\n- Lãi suất: từ 12%/năm\n- Thời hạn: 12-60 tháng',
-      '🏠 **Vay mua nhà:**\n- Hạn mức: lên đến 85% giá trị nhà\n- Lãi suất: từ 8.5%/năm\n- Thời hạn: lên đến 25 năm',
-      '📄 **Hồ sơ cần thiết:**\n- CMND/CCCD\n- Giấy tờ thu nhập\n- Hóa đơn điện/nước\n- Sao kê tài khoản 3 tháng gần nhất',
-      'Bạn quan tâm đến gói vay nào? Tôi có thể tư vấn chi tiết hơn.'
+      'CoopBank cung cấp nhiều gói vay phù hợp với nhu cầu sản xuất, kinh doanh và tiêu dùng cá nhân:',
+  '🌾 **Vay phục vụ sản xuất nông nghiệp**\n- Phù hợp với hộ nông dân, hợp tác xã\n- Hạn mức: theo nhu cầu thực tế (có thể lên đến vài trăm triệu đồng)\n- Lãi suất ưu đãi theo chính sách hỗ trợ phát triển nông thôn\n- Thời hạn: 6 - 60 tháng',
+  '🛒 **Vay hộ kinh doanh cá thể / tiểu thương**\n- Hỗ trợ vốn lưu động, mua hàng, mở rộng quy mô\n- Hạn mức: 30 - 500 triệu\n- Có thể yêu cầu tài sản đảm bảo hoặc bảo lãnh từ Quỹ tín dụng nhân dân',
+  '🏡 **Vay tiêu dùng có tài sản đảm bảo**\n- Dành cho mục đích: sửa nhà, học phí, mua sắm, chữa bệnh...\n- Tài sản đảm bảo: sổ đỏ, xe ô tô, sổ tiết kiệm\n- Lãi suất hợp lý, linh hoạt thời hạn trả nợ',
+  '📄 **Hồ sơ vay vốn cần chuẩn bị:**\n- CMND/CCCD + sổ hộ khẩu\n- Phương án vay vốn (kế hoạch sản xuất, nhu cầu cụ thể...)\n- Giấy tờ chứng minh thu nhập hoặc tài sản đảm bảo\n- Một số giấy tờ khác tùy theo từng gói vay',
+  '📌 Bạn đang cần vay để làm gì? (ví dụ: trồng trọt, chăn nuôi, kinh doanh, sửa nhà...) Mình sẽ tư vấn gói vay phù hợp nhất cho bạn.'
     ]
   },
   {
     id: 'savings-investment',
-    title: 'Gửi tiết kiệm và đầu tư',
+    title: 'Gửi tiết kiệm và tích luỹ',
     userType: 'customer',
     icon: <TrendingUp className="w-4 h-4" />,
-    description: 'Tư vấn các sản phẩm tiết kiệm và đầu tư',
+    description: 'Tư vấn các sản phẩm tiết kiệm và sinh lời ổn định',
     initialMessage: 'Tôi muốn tìm hiểu về các sản phẩm gửi tiết kiệm của ngân hàng.',
     responses: [
-      'TV Bank có đa dạng sản phẩm tiết kiệm phù hợp với mọi nhu cầu:',
-      '💰 **Tiết kiệm truyền thống:**\n- Không kỳ hạn: 0.5%/năm\n- Có kỳ hạn 1-6 tháng: 4.5-5.2%/năm\n- Có kỳ hạn 12-24 tháng: 5.8-6.5%/năm',
-      '🎯 **Tiết kiệm tích lũy:**\n- Gửi đều đặn hàng tháng từ 500K\n- Lãi suất ưu đãi: 6.2%/năm\n- Linh hoạt rút trước khi đáo hạn',
-      '📈 **Đầu tư chứng khoán:**\n- Mở tài khoản miễn phí\n- Phí giao dịch ưu đãi 0.15%\n- Tư vấn đầu tư chuyên nghiệp',
-      '🏅 **Chứng chỉ tiền gửi:**\n- Kỳ hạn linh hoạt 3-36 tháng\n- Lãi suất cao nhất thị trường\n- Có thể chuyển nhượng',
-      'Bạn quan tâm đến sản phẩm nào? Tôi có thể tư vấn chi tiết hơn.'
+      'TV Bank cung cấp nhiều lựa chọn gửi tiết kiệm linh hoạt, phù hợp với nhu cầu tích lũy an toàn của khách hàng:',
+    '💵 **Tiết kiệm có kỳ hạn:**\n- Kỳ hạn: từ 1 tháng đến 36 tháng\n- Lãi suất: cạnh tranh theo kỳ hạn, trả lãi cuối kỳ hoặc định kỳ\n- Có thể tái tục tự động khi đến hạn',
+    '🧾 **Tiết kiệm không kỳ hạn:**\n- Gửi và rút bất cứ lúc nào\n- Lãi suất: khoảng 0.2% - 0.5%/năm\n- Phù hợp tích lũy linh hoạt, không cố định thời gian',
+    '🎯 **Tiết kiệm tích lũy định kỳ:**\n- Gửi hàng tháng từ 200.000 VNĐ trở lên\n- Lãi suất ưu đãi theo kỳ hạn đăng ký\n- Hỗ trợ khách hàng hình thành thói quen tiết kiệm',
+    '🏅 **Chứng chỉ tiền gửi TV Bank:**\n- Kỳ hạn từ 6 đến 36 tháng\n- Lãi suất cao hơn gửi tiết kiệm thông thường\n- Có thể chuyển nhượng nếu cần thanh khoản',
+    '📌 Bạn đang quan tâm đến hình thức gửi tiết kiệm nào? Mình sẽ tư vấn cụ thể hơn về kỳ hạn và lãi suất cho bạn.'
     ]
   },
   {
@@ -221,13 +222,13 @@ const chatScenarios: ChatScenario[] = [
     userType: 'manager',
     icon: <TrendingUp className="w-4 h-4" />,
     description: 'Tổng quan hiệu suất và KPI của chi nhánh',
-    initialMessage: 'Tôi cần xem báo cáo hiệu suất tháng này của chi nhánh Hai Bà Trưng.',
+    initialMessage: 'Tôi cần xem báo cáo hiệu suất tháng này của chi nhánh.',
     responses: [
-      '📊 **Báo cáo hiệu suất Chi nhánh Hai Bà Trưng - Tháng 12/2024:**',
-      '💰 **Tài chính:**\n- Tổng huy động: 485 tỷ (đạt 97% kế hoạch)\n- Tổng cho vay: 392 tỷ (đạt 104% kế hoạch)\n- Lợi nhuận: 15.2 tỷ (tăng 12% so với cùng kỳ)',
-      '👥 **Khách hàng:**\n- Khách hàng mới: 234 (đạt 117% chỉ tiêu)\n- Tỷ lệ hài lòng: 4.6/5\n- Số lượng giao dịch: 12,458 (tăng 8%)',
+      '📊 **Báo cáo hiệu suất nchi nhánh - Tháng 07/2025:**',
+      '💰 **Tài chính:**\n- Tổng huy động: 485 tỷ (đạt 97% kế hoạch)\n- Tổng cho vay: 392 tỷ (đạt 104% kế hoạch)\n- Lợi nhuận: 15.2 tỷ (tăng 12% so với cùng kỳ)\n- Tỷ trọng cho vay hộ gia đình: 68% tổng dư nợ',
+      '👥 **Khách hàng:**\n- Khách hàng mới: 234 (đạt 117% chỉ tiêu)\n- Tỷ lệ hài lòng: 4.6/5\n- Số lượng giao dịch: 12,458 (tăng 8%)\n- Chương trình "Tài chính xanh": 56 hộ vay ưu đãi (đạt 112% chỉ tiêu)',
       '⚡ **Hiệu suất:**\n- Thời gian xử lý hồ sơ vay: 3.2 ngày (giảm 0.5 ngày)\n- Tỷ lệ nợ xấu: 0.8% (trong ngưỡng kiểm soát)\n- ROA: 1.8%',
-      '🏆 **Xếp hạng:** #3/15 chi nhánh khu vực Hà Nội',
+      '🏆 **Xếp hạng:** #3/6 chi nhánh khu vực Hà Nội',
       'Bạn muốn xem chi tiết về chỉ số nào cụ thể?'
     ]
   },
