@@ -55,7 +55,7 @@ const chatScenarios: ChatScenario[] = [
     description: 'Tư vấn các gói vay và thủ tục cần thiết',
     initialMessage: 'Tôi muốn tìm hiểu về các gói vay cá nhân của ngân hàng.',
     responses: [
-      'CoopBank cung cấp nhiều gói vay phù hợp với nhu cầu sản xuất, kinh doanh và tiêu dùng cá nhân:',
+      'TV Bank cung cấp nhiều gói vay phù hợp với nhu cầu sản xuất, kinh doanh và tiêu dùng cá nhân:',
   '🌾 **Vay phục vụ sản xuất nông nghiệp**\n- Phù hợp với hộ nông dân, hợp tác xã\n- Hạn mức: theo nhu cầu thực tế (có thể lên đến vài trăm triệu đồng)\n- Lãi suất ưu đãi theo chính sách hỗ trợ phát triển nông thôn\n- Thời hạn: 6 - 60 tháng',
   '🛒 **Vay hộ kinh doanh cá thể / tiểu thương**\n- Hỗ trợ vốn lưu động, mua hàng, mở rộng quy mô\n- Hạn mức: 30 - 500 triệu\n- Có thể yêu cầu tài sản đảm bảo hoặc bảo lãnh từ Quỹ tín dụng nhân dân',
   '🏡 **Vay tiêu dùng có tài sản đảm bảo**\n- Dành cho mục đích: sửa nhà, học phí, mua sắm, chữa bệnh...\n- Tài sản đảm bảo: sổ đỏ, xe ô tô, sổ tiết kiệm\n- Lãi suất hợp lý, linh hoạt thời hạn trả nợ',
