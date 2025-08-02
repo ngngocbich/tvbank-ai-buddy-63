@@ -113,9 +113,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const redirectUrl = `${window.location.origin}/`;
   let error;
   if (isPhone) {
-    // Đăng ký bằng phone
+    // Format phone cho Supabase (+84...)
+    const formattedPhone = identifier.startsWith('+') ? identifier : `+84${identifier.replace(/^0/, '')}`;
     ({ error } = await supabase.auth.signUp({
-      phone: identifier,
+      phone: formattedPhone,
       password,
       options: {
         data: userData
@@ -138,8 +139,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 const signIn = async (identifier: string, password: string, isPhone = false) => {
   let error;
   if (isPhone) {
+    // Với Supabase, đăng nhập bằng phone cần format +84...
+    const formattedPhone = identifier.startsWith('+') ? identifier : `+84${identifier.replace(/^0/, '')}`;
     ({ error } = await supabase.auth.signInWithPassword({
-      phone: identifier,
+      phone: formattedPhone,
       password
     }));
   } else {

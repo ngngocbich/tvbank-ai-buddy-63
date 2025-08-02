@@ -348,6 +348,16 @@ export default function ChatInterface() {
   const [selectedUserType, setSelectedUserType] = useState<string>('customer');
   const [isTyping, setIsTyping] = useState(false);
   const [showAIConfig, setShowAIConfig] = useState(false);
+  
+  // Listen for AI config toggle event
+  useEffect(() => {
+    const handleToggleAIConfig = () => {
+      setShowAIConfig(prev => !prev);
+    };
+    
+    window.addEventListener('toggleAIConfig', handleToggleAIConfig);
+    return () => window.removeEventListener('toggleAIConfig', handleToggleAIConfig);
+  }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -516,7 +526,16 @@ export default function ChatInterface() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-banking-blue/5">
-      <Header onShowAIConfig={() => setShowAIConfig(true)} />
+      <Header onShowAIConfig={() => setShowAIConfig(!showAIConfig)} />
+      
+      {/* AI Configuration Panel */}
+      {showAIConfig && (
+        <div className="bg-white border-b border-banking-blue/20 shadow-sm">
+          <div className="container mx-auto px-4 py-4 max-w-6xl">
+            <AIIntegration />
+          </div>
+        </div>
+      )}
       
       <div className="container mx-auto p-4 max-w-6xl">
         <div className="grid lg:grid-cols-3 gap-6">
