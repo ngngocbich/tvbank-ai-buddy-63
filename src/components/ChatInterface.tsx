@@ -472,15 +472,25 @@ export default function ChatInterface() {
           Thông tin người dùng
         </h3>
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-banking-blue to-banking-light flex items-center justify-center text-white font-bold text-sm">
+              {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+            </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{profile?.full_name || user?.email}</p>
+              <p className="text-xs text-banking-blue font-medium">
+                {profile?.role === 'customer' && 'Khách hàng'}
+                {profile?.role === 'consultant' && 'Chuyên viên tư vấn'}
+                {profile?.role === 'branch_manager' && 'Quản lý chi nhánh'}
+              </p>
             </div>
+          </div>
+          <div className="flex justify-end">
             <Button
               variant="ghost"
               size="sm"
               onClick={signOut}
-              className="text-destructive hover:text-destructive flex-shrink-0"
+              className="text-destructive hover:text-destructive"
             >
               <LogOut className="w-4 h-4 mr-1" />
               Đăng xuất
@@ -537,11 +547,13 @@ export default function ChatInterface() {
         </div>
       )}
       
-      <div className="container mx-auto p-4 max-w-6xl">
-        <div className="grid lg:grid-cols-3 gap-6">
+      <div className="container mx-auto p-4 max-w-7xl">
+        <div className="flex gap-6 h-[calc(100vh-140px)]">
           {/* Desktop Sidebar */}
-          <div className="hidden lg:block lg:col-span-1">
-            <SidebarContent />
+          <div className="hidden lg:block w-80 flex-shrink-0">
+            <div className="h-full">
+              <SidebarContent />
+            </div>
           </div>
 
           {/* Mobile Sidebar */}
@@ -557,8 +569,8 @@ export default function ChatInterface() {
           </Sheet>
 
           {/* Chat Interface */}
-          <div className="lg:col-span-2">
-            <Card className="h-[600px] flex flex-col shadow-xl border-banking-blue/20">
+          <div className="flex-1 min-w-0">
+            <Card className="h-full flex flex-col shadow-xl border-banking-blue/20">
               {/* Chat Header */}
               <div className="p-4 border-b bg-gradient-to-r from-banking-blue to-banking-light text-white rounded-t-lg">
                 <div className="flex items-center gap-3">
