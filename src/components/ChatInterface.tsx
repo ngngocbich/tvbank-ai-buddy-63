@@ -519,7 +519,7 @@ export default function ChatInterface() {
             >
               <div className="flex items-start gap-3">
                 {scenario.icon}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 overflow-hidden">
                   <div className="font-medium text-sm truncate">{scenario.title}</div>
                   <div className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed break-words">
                     {scenario.description}
