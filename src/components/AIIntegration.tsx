@@ -136,18 +136,30 @@ export default function AIIntegration() {
         
         if (!response.ok) throw new Error('OpenAI API connection failed');
       } else {
-        // Gemini API test - sử dụng API endpoint mới nhất
+        // Gemini API test - sử dụng format đúng cho Gemini
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{ 
-              parts: [{ text: 'Test connection' }] 
-            }]
+            contents: [{
+              role: 'user',
+              parts: [{ text: 'Hello, test connection' }] 
+            }],
+            generationConfig: {
+              temperature: 0.1,
+              maxOutputTokens: 50
+            }
           })
         });
         
-        if (!response.ok) throw new Error('Gemini API connection failed');
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Gemini API Error:', response.status, errorText);
+          throw new Error(`Gemini API connection failed: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('Gemini test response:', data);
       }
 
       setConnectionStatus(prev => ({ ...prev, [provider]: 'connected' }));
@@ -384,48 +396,102 @@ const callOpenAI = async (message: string, userType: string, config: AIConfig,hi
   return data.choices[0].message.content;
 };
 
-// Gọi Gemini API với endpoint mới nhất
+// Gọi Gemini API với format đúng và retry logic
 const callGemini = async (
   message: string,
   userType: string,
   config: AIConfig,
-  history?: { role: 'user' | 'assistant'; content: string }[]
+  history?: { role: 'user' | 'assistant'; content: string }[],
+  retryCount = 0
 ) => {
-  const contents = [
-    { role: 'system', parts: [{ text: config.systemPrompt }] },
-    ...(history
-      ? history.map(m => ({
-          role: m.role === 'user' ? 'user' : 'model',
-          parts: [{ text: m.content }]
-        }))
-      : [{ role: 'user', parts: [{ text: `[${userType}] ${message}` }] }]
-    )
-  ];
+  // Tạo system instruction từ system prompt
+  const systemInstruction = {
+    parts: [{ text: config.systemPrompt }]
+  };
 
-  console.log('Gemini contents:', contents);
-
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents,
-        generationConfig: {
-          temperature: config.temperature,
-          maxOutputTokens: config.maxTokens
-        }
-      })
-    }
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Gemini API error:', response.status, errorText); //
-    throw new Error('Gemini API failed');
+  // Xây dựng contents cho conversation
+  const contents = [];
+  
+  // Thêm history nếu có
+  if (history && history.length > 0) {
+    history.forEach(msg => {
+      contents.push({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      });
+    });
   }
-  const data = await response.json();
-  return data.candidates[0].content.parts[0].text;
+  
+  // Thêm message hiện tại
+  contents.push({
+    role: 'user',
+    parts: [{ text: `[${userType}] ${message}` }]
+  });
+
+  console.log('Gemini request:', { systemInstruction, contents });
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction,
+          contents,
+          generationConfig: {
+            temperature: config.temperature,
+            maxOutputTokens: config.maxTokens,
+            topP: 0.8,
+            topK: 10
+          }
+        })
+      }
+    );
+
+    if (response.status === 429) {
+      // Rate limit exceeded - retry with exponential backoff
+      if (retryCount < 3) {
+        const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s, 4s
+        console.warn(`Rate limit exceeded. Retrying in ${delay}ms... (attempt ${retryCount + 1}/3)`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        return callGemini(message, userType, config, history, retryCount + 1);
+      } else {
+        throw new Error('Rate limit exceeded. Please wait a few minutes and try again.');
+      }
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Gemini API error:', response.status, errorText);
+      
+      // Specific error messages
+      if (response.status === 400) {
+        throw new Error('Invalid request format. Please check your API configuration.');
+      } else if (response.status === 403) {
+        throw new Error('API key invalid or insufficient permissions.');
+      } else if (response.status === 404) {
+        throw new Error('Model not found. Please check the model name.');
+      } else {
+        throw new Error(`Gemini API failed: ${response.status} - ${errorText}`);
+      }
+    }
+    
+    const data = await response.json();
+    console.log('Gemini response:', data);
+    
+    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+      throw new Error('Invalid response format from Gemini API');
+    }
+    
+    return data.candidates[0].content.parts[0].text;
+    
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('Network error. Please check your internet connection.');
+    }
+    throw error;
+  }
 };
 
 // Fallback response khi API không khả dụng
