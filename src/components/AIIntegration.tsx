@@ -8,6 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Bot, Key, Settings, Zap, MessageSquare, Brain } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+
 
 interface AIConfig {
   provider: 'openai' | 'gemini';
@@ -45,8 +48,8 @@ LĨNH VỰC CHUYÊN MÔN:
   },
   gemini: {
     provider: 'gemini' as const,
-    apiKey: '',
-    model: 'gemini-2.0-flash',
+    apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
+    model: 'gemini-1.5-pro-002',
     systemPrompt: `Bạn là TV Bank AI Assistant - trợ lý thông minh của ngân hàng TV Bank.  Mô hình ngân hàng của chúng ta có phân khúc khách hàng giống CoopBank,
     nên hãy trả lời theo ngữ cảnh CoopBank nếu ko tìm được thông tin về TV Bank. Hãy hỗ trợ khách hàng một cách chuyên nghiệp và thân thiện. 
 
@@ -330,7 +333,7 @@ const saveConfig = (provider: 'openai' | 'gemini', config: AIConfig) => {
 };
 
 // Utility function cho AI response generation với API thực
-export const generateChatResponse = async (message: string, userType: string, provider: 'openai' | 'gemini' = 'gemini') => {
+export const generateChatResponse = async (message: string, userType: string, provider: 'openai' | 'gemini' = 'gemini', history?: { role: 'user' | 'assistant'; content: string }[] ) => {
   const storedConfig = getStoredConfig(provider);
   
   if (!storedConfig || !storedConfig.apiKey) {
@@ -339,9 +342,9 @@ export const generateChatResponse = async (message: string, userType: string, pr
 
   try {
     if (provider === 'openai') {
-      return await callOpenAI(message, userType, storedConfig);
+      return await callOpenAI(message, userType, storedConfig, history);
     } else {
-      return await callGemini(message, userType, storedConfig);
+      return await callGemini(message, userType, storedConfig, history);
     }
   } catch (error) {
     console.error('AI API Error:', error);
@@ -350,7 +353,11 @@ export const generateChatResponse = async (message: string, userType: string, pr
 };
 
 // Gọi OpenAI API
-const callOpenAI = async (message: string, userType: string, config: AIConfig) => {
+const callOpenAI = async (message: string, userType: string, config: AIConfig,history?: { role: 'user' | 'assistant'; content: string }[]) => {
+  const messages = [
+    { role: 'system', content: config.systemPrompt },
+    ...(history ?? [{ role: 'user', content: `[${userType}] ${message}` }])
+  ];
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -359,10 +366,11 @@ const callOpenAI = async (message: string, userType: string, config: AIConfig) =
     },
     body: JSON.stringify({
       model: config.model,
-      messages: [
+      /* messages: [
         { role: 'system', content: config.systemPrompt },
         { role: 'user', content: `[${userType}] ${message}` }
-      ],
+      ], */
+      messages,
       temperature: config.temperature,
       max_tokens: config.maxTokens
     })
@@ -377,27 +385,45 @@ const callOpenAI = async (message: string, userType: string, config: AIConfig) =
 };
 
 // Gọi Gemini API với endpoint mới nhất
-const callGemini = async (message: string, userType: string, config: AIConfig) => {
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{
-        parts: [{
-          text: `${config.systemPrompt}\n\nNgười dùng: [${userType}] ${message}`
-        }]
-      }],
-      generationConfig: {
-        temperature: config.temperature,
-        maxOutputTokens: config.maxTokens
-      }
-    })
-  });
+const callGemini = async (
+  message: string,
+  userType: string,
+  config: AIConfig,
+  history?: { role: 'user' | 'assistant'; content: string }[]
+) => {
+  const contents = [
+    { role: 'system', parts: [{ text: config.systemPrompt }] },
+    ...(history
+      ? history.map(m => ({
+          role: m.role === 'user' ? 'user' : 'model',
+          parts: [{ text: m.content }]
+        }))
+      : [{ role: 'user', parts: [{ text: `[${userType}] ${message}` }] }]
+    )
+  ];
+
+  console.log('Gemini contents:', contents);
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents,
+        generationConfig: {
+          temperature: config.temperature,
+          maxOutputTokens: config.maxTokens
+        }
+      })
+    }
+  );
 
   if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Gemini API error:', response.status, errorText); //
     throw new Error('Gemini API failed');
   }
-
   const data = await response.json();
   return data.candidates[0].content.parts[0].text;
 };
