@@ -521,7 +521,7 @@ export default function ChatInterface() {
                 {scenario.icon}
                 <div className="flex-1 min-w-0 overflow-hidden">
                   <div className="font-medium text-sm truncate">{scenario.title}</div>
-                  <div className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed break-words">
+                  <div className="text-xs text-muted-foreground mt-1 line-clamp-1 leading-relaxed break-words">
                     {scenario.description}
                   </div>
                 </div>
