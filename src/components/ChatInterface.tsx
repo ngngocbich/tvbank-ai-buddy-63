@@ -464,7 +464,7 @@ export default function ChatInterface() {
 
   // Sidebar content component for reuse
   const SidebarContent = () => (
-    <div className="space-y-6 p-4">
+    <div className="h-full flex flex-col space-y-4">{/* Remove p-4 padding */}
       {/* User Profile */}
       <Card className="p-4 shadow-lg border-banking-blue/20">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
@@ -500,12 +500,12 @@ export default function ChatInterface() {
       </Card>
 
       {/* Demo Scenarios */}
-      <Card className="p-4 shadow-lg border-banking-blue/20">
+      <Card className="p-4 shadow-lg border-banking-blue/20 flex-1 flex flex-col">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
           <MessageCircle className="w-5 h-5 text-banking-blue" />
           Hỗ trợ đề xuất
         </h3>
-        <div className="space-y-3">
+        <div className="space-y-3 flex-1 overflow-y-auto">
           {filteredScenarios.map((scenario) => (
             <Button
               key={scenario.id}
