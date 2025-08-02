@@ -505,7 +505,7 @@ export default function ChatInterface() {
           <MessageCircle className="w-5 h-5 text-banking-blue" />
           Hỗ trợ đề xuất
         </h3>
-        <div className="space-y-3 flex-1 overflow-y-auto">
+        <div className="space-y-3 flex-1 overflow-y-auto scrollbar-hide">
           {filteredScenarios.map((scenario) => (
             <Button
               key={scenario.id}
