@@ -517,7 +517,7 @@ export default function ChatInterface() {
                 setSidebarOpen(false); // Close mobile sidebar after selection
               }}
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-start gap-3 overflow-hidden">
                 {scenario.icon}
                 <div className="flex-1 min-w-0 overflow-hidden">
                   <div className="font-medium text-sm truncate">{scenario.title}</div>
