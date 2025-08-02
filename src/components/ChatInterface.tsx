@@ -50,7 +50,7 @@ const chatScenarios: ChatScenario[] = [
     title: 'Kiểm tra số dư tài khoản',
     userType: 'customer',
     icon: <CreditCard className="w-4 h-4" />,
-    description: 'Hướng dẫn kiểm tra số dư & lịch sử giao dịch',
+    description: 'Hướng dẫn kiểm tra số dư và lịch sử giao dịch',
     initialMessage: 'Chào bạn! Tôi muốn kiểm tra số dư tài khoản của mình.',
     responses: [
       'Xin chào! Tôi sẽ hướng dẫn bạn kiểm tra số dư tài khoản. Bạn có thể sử dụng các cách sau:',
@@ -82,7 +82,7 @@ const chatScenarios: ChatScenario[] = [
     title: 'Gửi tiết kiệm và tích luỹ',
     userType: 'customer',
     icon: <TrendingUp className="w-4 h-4" />,
-    description: 'Tư vấn sản phẩm tiết kiệm & sinh lời ổn định',
+    description: 'Tư vấn sản phẩm tiết kiệm, sinh lời ổn định',
     initialMessage: 'Tôi muốn tìm hiểu về các sản phẩm gửi tiết kiệm của ngân hàng.',
     responses: [
       'TV Bank cung cấp nhiều lựa chọn gửi tiết kiệm linh hoạt, phù hợp với nhu cầu tích lũy an toàn của khách hàng:',
@@ -98,7 +98,7 @@ const chatScenarios: ChatScenario[] = [
     title: 'Chuyển khoản và thanh toán',
     userType: 'customer',
     icon: <Send className="w-4 h-4" />,
-    description: 'Hướng dẫn Chuyển khoản & thanh toán',
+    description: 'Hướng dẫn Chuyển khoản và thanh toán',
     initialMessage: 'Tôi cần hướng dẫn chuyển khoản qua ứng dụng mobile banking.',
     responses: [
       'Tôi sẽ hướng dẫn bạn chuyển khoản qua TV Bank Mobile:',
