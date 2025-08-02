@@ -35,10 +35,10 @@ export default function Header({ onShowAIConfig }: HeaderProps) {
               variant="ghost"
               size="sm"
               onClick={onShowAIConfig}
-              className="text-xs"
+              className="text-xs hover:bg-banking-blue/10"
             >
               <Bot className="w-3 h-3 mr-1" />
-              AI Config
+              Tích hợp AI
             </Button>
           </div>
         </div>

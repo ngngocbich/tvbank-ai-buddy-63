@@ -49,7 +49,7 @@ LĨNH VỰC CHUYÊN MÔN:
   gemini: {
     provider: 'gemini' as const,
     apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
-    model: 'gemini-1.5-pro-002',
+    model: 'gemini-2.5-pro',
     systemPrompt: `Bạn là TV Bank AI Assistant - trợ lý thông minh của ngân hàng TV Bank.  Mô hình ngân hàng của chúng ta có phân khúc khách hàng giống CoopBank,
     nên hãy trả lời theo ngữ cảnh CoopBank nếu ko tìm được thông tin về TV Bank. Hãy hỗ trợ khách hàng một cách chuyên nghiệp và thân thiện. 
 
@@ -232,11 +232,20 @@ export default function AIIntegration() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor={`${provider}-model`}>Model</Label>
-                        <Input
-                          id={`${provider}-model`}
-                          value={configs[provider].model}
-                          onChange={(e) => updateConfig(provider, { model: e.target.value })}
-                        />
+                        {provider === 'gemini' ? (
+                          <Input
+                            id={`${provider}-model`}
+                            value="gemini-2.5-pro"
+                            disabled
+                            className="bg-muted"
+                          />
+                        ) : (
+                          <Input
+                            id={`${provider}-model`}
+                            value={configs[provider].model}
+                            onChange={(e) => updateConfig(provider, { model: e.target.value })}
+                          />
+                        )}
                       </div>
                       <div>
                         <Label htmlFor={`${provider}-temperature`}>Temperature</Label>
@@ -273,31 +282,6 @@ export default function AIIntegration() {
                   </div>
                 </div>
 
-                {/* System Prompt */}
-                <div>
-                  <h3 className="font-semibold mb-4 flex items-center gap-2">
-                    <Settings className="w-5 h-5 text-banking-blue" />
-                    System Prompt (Hướng dẫn cho AI)
-                  </h3>
-                  
-                  <Textarea
-                    value={configs[provider].systemPrompt}
-                    onChange={(e) => updateConfig(provider, { systemPrompt: e.target.value })}
-                    className="min-h-[200px]"
-                    placeholder="Nhập hướng dẫn để AI hoạt động theo yêu cầu của bạn..."
-                  />
-                  
-                  <div className="mt-4 p-4 bg-banking-blue/5 rounded-lg">
-                    <h4 className="font-medium text-sm mb-2">💡 Gợi ý để tối ưu System Prompt:</h4>
-                    <ul className="text-xs text-muted-foreground space-y-1">
-                      <li>• Định nghĩa rõ vai trò và tính cách của AI</li>
-                      <li>• Liệt kê các sản phẩm/dịch vụ chính của ngân hàng</li>
-                      <li>• Đặt ra các nguyên tắc bảo mật và compliance</li>
-                      <li>• Hướng dẫn cách xử lý tình huống phức tạp</li>
-                      <li>• Định dạng phản hồi phù hợp với thương hiệu</li>
-                    </ul>
-                  </div>
-                </div>
 
                 {/* Connection Status */}
                 {connectionStatus[provider] === 'connected' && (

@@ -542,6 +542,17 @@ export default function ChatInterface() {
       {showAIConfig && (
         <div className="bg-white border-b border-banking-blue/20 shadow-sm">
           <div className="container mx-auto px-4 py-4 max-w-6xl">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-banking-blue">Tích hợp AI Engine</h2>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setShowAIConfig(false)}
+                className="text-muted-foreground hover:text-banking-blue"
+              >
+                Đóng
+              </Button>
+            </div>
             <AIIntegration />
           </div>
         </div>
