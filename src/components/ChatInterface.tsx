@@ -29,6 +29,20 @@ interface ChatScenario {
   responses: string[];
 }
 
+const openEndedBotEndings = [
+  'Bạn cần hỗ trợ thêm về cách nào cụ thể không?',
+  '📌 Bạn đang cần vay để làm gì? (ví dụ: trồng trọt, chăn nuôi, kinh doanh, sửa nhà...) Mình sẽ tư vấn gói vay phù hợp nhất cho bạn.',
+  '📌 Bạn đang quan tâm đến hình thức gửi tiết kiệm nào? Mình sẽ tư vấn cụ thể hơn về kỳ hạn và lãi suất cho bạn.',
+  'Bạn cần hỗ trợ thêm về loại chuyển khoản nào không?',
+  'Bạn đang cần hỗ trợ mở thẻ, kích hoạt hay hướng dẫn sử dụng? Mình có thể giúp bạn ngay.',
+  'Bạn đang muốn bảo vệ bản thân, gia đình hay tài sản? Mình có thể tư vấn gói phù hợp nhất cho bạn.',
+
+  'Bạn muốn xem chi tiết chỉ tiêu nào hơn? (ví dụ: tỷ lệ cho vay hộ gia đình, năng suất nhân viên, nợ quá hạn...)',
+  'Bạn muốn phân tích thêm về nhóm nào? (Ví dụ: theo ngành nghề, độ tuổi, sản phẩm sử dụng...)',
+  'Bạn cần đi sâu vào phần nào? (tín dụng, huy động, lợi nhuận...)',
+  'Bạn muốn theo dõi sâu hơn về nhóm khách hàng, phân khúc ngành, hay loại hình rủi ro nào?',
+  'Bạn cần mình phân tích sâu hơn về phần nào? (chuyển đổi số, tài chính, nhân sự hay địa phương hóa dịch vụ?)'
+];
 const chatScenarios: ChatScenario[] = [
   // Khách hàng scenarios
   {
@@ -104,13 +118,12 @@ const chatScenarios: ChatScenario[] = [
     description: 'Thông tin và hướng dẫn sử dụng thẻ',
     initialMessage: 'Tôi muốn đăng ký thẻ tín dụng và tìm hiểu các ưu đãi.',
     responses: [
-      'TV Bank có nhiều loại thẻ phù hợp với nhu cầu của bạn:',
-      '💳 **Thẻ tín dụng Classic:**\n- Hạn mức: 10-50 triệu\n- Miễn phí năm đầu\n- Hoàn tiền 0.5% mọi giao dịch',
-      '🏆 **Thẻ tín dụng Gold:**\n- Hạn mức: 50-200 triệu\n- Hoàn tiền 1% mọi giao dịch\n- Ưu đãi tại sân bay và khách sạn',
-      '💎 **Thẻ tín dụng Platinum:**\n- Hạn mức: 200-500 triệu\n- Hoàn tiền 1.5% + tích điểm\n- Dịch vụ concierge 24/7',
-      '🛡️ **Thẻ ghi nợ:**\n- Liên kết trực tiếp với tài khoản\n- Rút tiền miễn phí tại ATM TV Bank\n- Thanh toán không tiếp xúc',
-      '📋 **Điều kiện đăng ký:**\n- Thu nhập từ 8 triệu/tháng\n- CMND + Giấy tờ thu nhập\n- Duyệt nhanh trong 24h',
-      'Loại thẻ nào phù hợp với bạn nhất?'
+      'TVBank cung cấp các loại thẻ đơn giản, tiện lợi, phù hợp với mọi người dân:', 
+      '💳 **Thẻ ghi nợ nội địa (ATM):**\n- Liên kết trực tiếp với tài khoản thanh toán\n- Rút tiền tại hơn 17.000 ATM toàn quốc\n- Thanh toán hàng hóa tại cửa hàng chấp nhận thẻ\n- Miễn phí mở thẻ lần đầu',
+      '📱 **Thẻ kết nối Mobile Banking:**\n- Quản lý tài khoản qua điện thoại\n- Chuyển khoản, thanh toán hóa đơn nhanh chóng\n- Miễn phí duy trì nếu giao dịch thường xuyên',
+      '🔒 **Tính năng an toàn:**\n- Giao dịch xác thực bằng OTP\n- Tự động khóa thẻ qua ứng dụng nếu bị mất\n- Hỗ trợ cấp lại thẻ nhanh tại chi nhánh gần nhất',
+      '📋 **Điều kiện đăng ký:**\n- Có CMND/CCCD còn hiệu lực\n- Mở tài khoản thanh toán tại CoopBank\n- Đăng ký tại chi nhánh hoặc qua Mobile App',
+      'Bạn đang cần hỗ trợ mở thẻ, kích hoạt hay hướng dẫn sử dụng? Mình có thể giúp bạn ngay.'
     ]
   },
   {
@@ -118,15 +131,15 @@ const chatScenarios: ChatScenario[] = [
     title: 'Dịch vụ bảo hiểm',
     userType: 'customer',
     icon: <TrendingUp className="w-4 h-4" />,
-    description: 'Tư vấn các gói bảo hiểm liên kết ngân hàng',
+    description: 'Tư vấn các gói bảo hiểm',
     initialMessage: 'Tôi quan tâm đến các sản phẩm bảo hiểm của ngân hàng.',
     responses: [
-      'TV Bank hợp tác với các công ty bảo hiểm uy tín để cung cấp:',
-      '🏥 **Bảo hiểm sức khỏe:**\n- Bảo hiểm y tế cá nhân\n- Bảo hiểm tai nạn 24/7\n- Gói gia đình ưu đãi',
-      '🏠 **Bảo hiểm tài sản:**\n- Bảo hiểm nhà ở\n- Bảo hiểm xe cộ\n- Bảo hiểm hàng hóa',
-      '💼 **Bảo hiểm nhân thọ:**\n- Bảo hiểm tiết kiệm\n- Bảo hiểm giáo dục\n- Bảo hiểm hưu trí',
-      '🎁 **Ưu đãi đặc biệt:**\n- Giảm 15% phí bảo hiểm cho khách hàng VIP\n- Thanh toán phí qua tài khoản TV Bank\n- Hỗ trợ bồi thường nhanh chóng',
-      'Bạn muốn tìm hiểu loại bảo hiểm nào cụ thể?'
+      'TV Bank hợp tác với các đơn vị bảo hiểm uy tín để mang đến các sản phẩm đơn giản, phù hợp với mọi người dân:',    
+      '🏥 **Bảo hiểm sức khỏe cơ bản:**\n- Hỗ trợ chi phí điều trị nội trú và tai nạn\n- Gói dành cho cá nhân hoặc cả gia đình\n- Phí tham gia thấp, quyền lợi thiết thực',
+      '🚜 **Bảo hiểm cho hộ sản xuất:**\n- Bảo hiểm cây trồng, vật nuôi\n- Bảo hiểm tai nạn lao động nông nghiệp\n- Hợp tác với HTX và tổ vay vốn',
+      '🏡 **Bảo hiểm nhà ở & tài sản:**\n- Bảo hiểm nhà cấp 4, nhà cấp 3 tại khu vực nông thôn\n- Bảo hiểm vật dụng gia đình cơ bản\n- Phí thấp, thanh toán linh hoạt qua tài khoản',
+      '📋 **Quy trình tham gia đơn giản:**\n- Đăng ký tại chi nhánh TV Bank gần nhất\n- Thanh toán phí trực tiếp hoặc trích từ tài khoản\n- Hỗ trợ giải quyết bồi thường nhanh, rõ ràng',
+      'Bạn đang muốn bảo vệ bản thân, gia đình hay tài sản? Mình có thể tư vấn gói phù hợp nhất cho bạn.'
     ]
   },
   
@@ -224,12 +237,18 @@ const chatScenarios: ChatScenario[] = [
     description: 'Tổng quan hiệu suất và KPI của chi nhánh',
     initialMessage: 'Tôi cần xem báo cáo hiệu suất tháng này của chi nhánh.',
     responses: [
-      '📊 **Báo cáo hiệu suất của chi nhánh - Tháng 07/2025:**',
-      '💰 **Tài chính:**\n- Tổng huy động: 485 tỷ (đạt 97% kế hoạch)\n- Tổng cho vay: 392 tỷ (đạt 104% kế hoạch)\n- Lợi nhuận: 15.2 tỷ (tăng 12% so với cùng kỳ)\n- Tỷ trọng cho vay hộ gia đình: 68% tổng dư nợ',
-      '👥 **Khách hàng:**\n- Khách hàng mới: 234 (đạt 117% chỉ tiêu)\n- Tỷ lệ hài lòng: 4.6/5\n- Số lượng giao dịch: 12,458 (tăng 8%)\n- Chương trình "Tài chính xanh": 56 hộ vay ưu đãi (đạt 112% chỉ tiêu)',
-      '⚡ **Hiệu suất:**\n- Thời gian xử lý hồ sơ vay: 3.2 ngày (giảm 0.5 ngày)\n- Tỷ lệ nợ xấu: 0.8% (trong ngưỡng kiểm soát)\n- ROA: 1.8%',
-      '🏆 **Xếp hạng:** #3/6 chi nhánh khu vực Hà Nội',
-      'Bạn muốn xem chi tiết về chỉ số nào cụ thể?'
+      '📊 **Báo cáo hiệu suất chi nhánh TV Bank Hoàn Kiếm - Hà Nội - Tháng 07/2025:**',
+
+      '💰 **Tài chính:**\n- Tổng huy động vốn: 68.5 tỷ (đạt 102% kế hoạch)\n- Tổng cho vay: 54.2 tỷ (đạt 108%)\n- Lợi nhuận trước thuế: 1.12 tỷ (tăng 15% so với cùng kỳ)\n- Tỷ lệ cho vay phục vụ sản xuất nông nghiệp: 72% tổng dư nợ',
+
+      '👥 **Khách hàng & cộng đồng:**\n- Khách hàng mới mở tài khoản: 156\n- Hộ vay mới: 84 (chủ yếu qua tổ vay vốn)\n- Tỷ lệ hài lòng: 4.7/5\n- Giao dịch Mobile Banking tăng 22% so với tháng trước',
+
+      '⚡ **Hiệu suất vận hành:**\n- Thời gian xử lý hồ sơ vay: 2.9 ngày (rút ngắn 0.6 ngày)\n- Nợ xấu dưới 1% (trong kiểm soát)\n- Hỗ trợ vay vốn ưu đãi theo chính sách xã: 31 hồ sơ thành công',
+
+      '🏅 **Xếp hạng nội bộ:** #2/8 chi nhánh miền Trung (tiêu chí: tăng trưởng bền vững, chất lượng dịch vụ, an toàn tín dụng)',
+
+      'Bạn muốn xem chi tiết chỉ tiêu nào hơn? (ví dụ: tỷ lệ cho vay hộ gia đình, năng suất nhân viên, nợ quá hạn...)'
+
     ]
   },
   {
@@ -238,14 +257,19 @@ const chatScenarios: ChatScenario[] = [
     userType: 'manager',
     icon: <Users className="w-4 h-4" />,
     description: 'Phân tích đối tượng khách hàng và xu hướng',
-    initialMessage: 'Cần báo cáo phân tích khách hàng VIP của toàn hệ thống.',
+    initialMessage: 'Tôi cần báo cáo phân tích khách hàng theo nhóm thu nhập và vùng miền.',
     responses: [
-      '👑 **Báo cáo Khách hàng VIP - Toàn hệ thống:**',
-      '📈 **Tổng quan:**\n- Tổng số KH VIP: 2,847 (tăng 15% so với năm trước)\n- Tổng tài sản gửi: 8,450 tỷ VND\n- Doanh thu từ KH VIP: 245 tỷ (chiếm 68% tổng doanh thu)',
-      '🎯 **Phân khúc:**\n- Premier (>5 tỷ): 156 khách (5.5%)\n- Gold (1-5 tỷ): 734 khách (25.8%)\n- Silver (500tr-1 tỷ): 1,957 khách (68.7%)',
-      '📊 **Xu hướng sử dụng:**\n- Dịch vụ phổ biến: Gửi tiết kiệm (89%), Vay BĐS (45%), Đầu tư (32%)\n- Kênh giao dịch: Digital Banking (78%), Quầy (22%)',
-      '🎪 **Chương trình đặc biệt:**\n- Tỷ lệ tham gia: 76%\n- Mức độ hài lòng: 4.8/5\n- Tần suất sử dụng tăng 25%',
-      'Bạn muốn xem phân tích sâu hơn về nhóm khách hàng nào?'
+      '👥 **Báo cáo Tổng quan Khách hàng - Hệ thống TV Bank (Tháng 07/2025):**',
+
+      '📊 **Tổng số khách hàng:**\n- 185,320 khách hàng đang hoạt động\n- Trong đó:\n  + Hộ gia đình: 74%\n  + Tiểu thương & HTX: 18%\n  + Cán bộ, công nhân viên chức: 8%',
+
+      '🌍 **Phân bố địa lý:**\n- Miền Bắc: 46%\n- Miền Trung: 33%\n- Miền Nam: 21%\n- Tỷ lệ sử dụng dịch vụ qua Mobile App: 41% (tăng 10% so với cùng kỳ)',
+
+      '💼 **Phân loại theo nhu cầu:**\n- Gửi tiết kiệm kỳ hạn: 68%\n- Vay tiêu dùng nhỏ (<100 triệu): 49%\n- Vay sản xuất nông nghiệp: 27%\n- Nhận tiền qua thẻ ATM: 62%',
+
+      '📈 **Xu hướng nổi bật:**\n- Số lượng khách mới qua tổ vay vốn tăng 19%\n- Nhu cầu chuyển khoản nội địa tăng mạnh tại vùng sâu\n- Giao dịch không tiền mặt tăng đều 7% mỗi tháng',
+
+      'Bạn muốn phân tích thêm về nhóm nào? (Ví dụ: theo ngành nghề, độ tuổi, sản phẩm sử dụng...)'
     ]
   },
   {
@@ -253,16 +277,21 @@ const chatScenarios: ChatScenario[] = [
     title: 'Dashboard tài chính',
     userType: 'manager',
     icon: <TrendingUp className="w-4 h-4" />,
-    description: 'Báo cáo tài chính và phân tích dòng tiền',
-    initialMessage: 'Cần xem dashboard tài chính tổng thể của ngân hàng trong Q1/2025.',
+    description: 'Tổng hợp tài chính và phân tích dòng vốn toàn hệ thống',
+    initialMessage: 'Cần xem báo cáo tài chính tổng thể của ngân hàng trong quý 1/2025.',
     responses: [
-      '📈 **Dashboard Tài chính Q4/2024:**',
-      '💰 **Tổng quan tài chính:**\n- Tổng tài sản: 125,000 tỷ VND (tăng 8% so với Q3)\n- Dư nợ tín dụng: 89,500 tỷ VND\n- Huy động vốn: 98,200 tỷ VND\n- Vốn chủ sở hữu: 12,800 tỷ VND',
-      '🎯 **Hiệu quả kinh doanh:**\n- ROE: 18.5% (vượt mục tiêu 16%)\n- ROA: 1.9% (đạt mục tiêu)\n- NIM: 4.2% (ổn định)\n- CIR: 35.8% (giảm 2.1%)',
-      '📊 **Chất lượng tài sản:**\n- NPL Ratio: 1.1% (giảm 0.3%)\n- Provision Coverage: 165%\n- LDR: 91.2% (trong giới hạn)\n- CAR: 15.8% (vượt Basel III)',
-      '🔄 **Dòng tiền và thanh khoản:**\n- LCR: 145% (vượt yêu cầu 100%)\n- NSFR: 125% (đạt chuẩn)\n- Dự trữ bắt buộc: Đảm bảo 100%',
-      '🏆 **So sánh ngành:** TV Bank xếp thứ 5/15 ngân hàng tương đương về ROE và chất lượng tài sản.',
-      'Bạn muốn đi sâu vào chỉ số nào cụ thể?'
+      '📈 **Dashboard Tài chính – Quý 1/2025:**',
+
+      '💰 **Tổng quan:**\n- Tổng tài sản: 9,850 tỷ VND (tăng 6.5% so với Q4/2024)\n- Dư nợ tín dụng: 7,320 tỷ VND\n- Huy động vốn từ dân cư: 7,860 tỷ VND\n- Vốn điều lệ: 980 tỷ VND',
+
+      '🎯 **Hiệu quả hoạt động:**\n- ROE: 11.2% (đạt mục tiêu)\n- ROA: 1.3%\n- NIM: 4.1%\n- CIR: 48.5% (ổn định)',
+
+      '🔍 **Chất lượng tín dụng:**\n- Tỷ lệ nợ xấu (NPL): 1.05% (trong ngưỡng cho phép)\n- Dư nợ cho vay hộ gia đình: chiếm 67%\n- Cho vay tổ vay vốn: tăng 11% so với Q1/2024',
+
+      '💧 **Thanh khoản và dòng tiền:**\n- Tỷ lệ sử dụng vốn (LDR): 93.8%\n- Tỷ lệ dự trữ thanh khoản: đảm bảo theo quy định NHNN\n- Luồng tiền thuần: dương 132 tỷ VND',
+
+      '🧭 **Ghi chú:** Báo cáo tập trung vào hiệu quả phục vụ cộng đồng và tính bền vững tài chính.',
+      'Bạn cần đi sâu vào phần nào? (tín dụng, huy động, lợi nhuận...)'
     ]
   },
   {
@@ -270,16 +299,20 @@ const chatScenarios: ChatScenario[] = [
     title: 'Quản lý rủi ro',
     userType: 'manager',
     icon: <Users className="w-4 h-4" />,
-    description: 'Báo cáo và kiểm soát các loại rủi ro',
-    initialMessage: 'Tôi cần báo cáo tổng thể về tình hình quản lý rủi ro hiện tại.',
+    description: 'Báo cáo kiểm soát rủi ro hoạt động và tín dụng',
+    initialMessage: 'Tôi cần tổng hợp tình hình quản lý rủi ro đến hết quý 2/2025.',
     responses: [
-      '⚠️ **Báo cáo Quản lý Rủi ro - Tháng 6/2025:**',
-      '🔴 **Rủi ro tín dụng:**\n- NPL: 1.1% (trong giới hạn 2%)\n- Top 10 khách hàng lớn: 18% vốn chủ sở hữu\n- Tập trung ngành: Bất động sản 35%, Sản xuất 28%\n- Stress test: Vượt qua kịch bản khó khăn',
-      '🟡 **Rủi ro thị trường:**\n- VaR (95%, 1 ngày): 2.8 tỷ VND\n- Duration Gap: +0.5 năm (chấp nhận được)\n- FX Exposure: $12M (hedge 80%)\n- Interest Rate Risk: Trong giới hạn',
-      '💧 **Rủi ro thanh khoản:**\n- Stress test thanh khoản: PASS\n- Funding concentration: Phân tán tốt\n- Maturity mismatch: Kiểm soát\n- Emergency funding: 15% tổng TS',
-      '🏛️ **Rủi ro hoạt động:**\n- Operational loss: 0.02% doanh thu\n- Cyber security: Không vi phạm nghiêm trọng\n- Business continuity: 99.8% uptime\n- Compliance: Không phạt lớn',
-      '📋 **Khuyến nghị:**\n- Tăng cường giám sát BĐS\n- Đa dạng hóa danh mục đầu tư\n- Nâng cấp hệ thống cảnh báo sớm',
-      'Loại rủi ro nào bạn quan tâm nhất?'
+      '⚠️ **Báo cáo Rủi ro – Quý 2/2025:**',
+
+      '📌 **Rủi ro tín dụng:**\n- Tỷ lệ nợ xấu: 1.05% (trong giới hạn cho phép)\n- Rủi ro chủ yếu tập trung ở khoản vay không tài sản đảm bảo\n- 87% dư nợ có tài sản thế chấp\n- Hộ vay nông nghiệp chiếm 62% dư nợ => đang được theo dõi sát sao mùa vụ',
+
+      '🔍 **Rủi ro vận hành:**\n- Không ghi nhận tổn thất lớn trong quý\n- Hệ thống giao dịch ổn định 99.5%\n- Đào tạo nhận diện rủi ro cho nhân viên tại 100% chi nhánh',
+
+      '💧 **Rủi ro thanh khoản:**\n- Dòng tiền ổn định, kiểm soát tốt kế hoạch chi ra và thu vào\n- Các tổ vay vốn trả đúng hạn: 92.3%\n- Không có rút vốn đột biến',
+
+      '📋 **Khuyến nghị:**\n- Tăng giám sát vùng có thời tiết bất thường\n- Xây dựng danh sách cảnh báo sớm khách hàng trễ hạn nhiều lần\n- Nâng cấp phần mềm kiểm tra hồ sơ tại chỗ',
+
+      'Bạn muốn theo dõi sâu hơn về nhóm khách hàng, phân khúc ngành, hay loại hình rủi ro nào?'
     ]
   },
   {
@@ -371,9 +404,30 @@ export default function ChatInterface() {
     setIsTyping(true);
     
     try {
+      // Lấy tin nhắn cuối cùng của bot
+      const lastBotMsg = [...messages].reverse().find(m => m.type === 'bot');
+      const isOpenEnded = lastBotMsg && openEndedBotEndings.some(ending =>
+        lastBotMsg.content.trim().endsWith(ending)
+      );
+
+      if (isOpenEnded) {
+      // Nếu là câu hỏi mở, gửi toàn bộ history cho AI
+      const history = [
+        ...messages.map((m) => ({
+          role: m.type === 'user' ? 'user' as const : 'assistant' as const,
+          content: m.content
+        })),
+        { role: 'user' as const, content: userMessage }
+      ];
+
       // Tích hợp AI response
-      const aiResponse = await generateChatResponse(userMessage, selectedUserType);
+      const aiResponse = await generateChatResponse(userMessage, selectedUserType, 'gemini', history);
       addMessage(aiResponse, 'bot');
+      } else {
+        // Nếu không, vẫn dùng AI như cũ (hoặc response tĩnh)
+        const aiResponse = await generateChatResponse(userMessage, selectedUserType);
+        addMessage(aiResponse, 'bot');
+      }
     } catch (error) {
       addMessage(
         'Xin lỗi, hệ thống AI đang gặp sự cố. Vui lòng thử lại sau hoặc liên hệ nhân viên hỗ trợ.',

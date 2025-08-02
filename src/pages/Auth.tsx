@@ -20,7 +20,6 @@ const Auth = () => {
   
   // Customer fields
   const [email, setEmail] = useState('');
-  const [phoneOrAccount, setPhoneOrAccount] = useState('');
   // const [phoneOrAccount, setPhoneOrAccount] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
@@ -49,7 +48,7 @@ const Auth = () => {
   const getLoginCredentials = () => {
     switch (role) {
       case 'customer':
-        return { email: phoneOrAccount, password };
+        return { phone: phone, password };
       case 'consultant':
         return { email: employeeId, password };
       case 'branch_manager':
@@ -71,7 +70,7 @@ const Auth = () => {
       case 'customer':
         return {
           ...baseData,
-          email: email || `${phone}@customer.tvbank.com`,
+          email: email,
           id_number: idNumber,
           id_issue_date: idIssueDate,
           id_issue_place: idIssuePlace
@@ -100,7 +99,14 @@ const Auth = () => {
     try {
       if (isLogin) {
         const credentials = getLoginCredentials();
-        const { error } = await signIn(credentials.email, credentials.password);
+        let error;
+        if (role === 'customer') {
+         // ({ error }  = await signIn(credentials.phone, credentials.password));
+          ({ error } = await signIn(credentials.phone, credentials.password, true));
+        } else {
+          ({ error } = await signIn(credentials.email, credentials.password));
+        }
+
         if (error) {
           toast({
             title: 'Lỗi đăng nhập',
@@ -115,8 +121,21 @@ const Auth = () => {
         }
       } else {
         const userData = getSignUpData();
+        let signUpIdentifier;
+        if (role === 'customer') {
+          signUpIdentifier = userData.phone;
+        } else if ('email' in userData && userData.email) {
+          signUpIdentifier = userData.email;
+        } else {
+          signUpIdentifier = '';
+        }
+        const isPhone = role === 'customer';
+        const { error } = await signUp(signUpIdentifier, password, userData, isPhone);
+        
+        /* const userData = getSignUpData();
         const signUpEmail = ('email' in userData ? userData.email : null) || email;
-        const { error } = await signUp(signUpEmail, password, userData);
+        const { error } = await signUp(signUpEmail, password, userData); */
+
         if (error) {
           toast({
             title: 'Lỗi đăng ký',
@@ -146,7 +165,7 @@ const Auth = () => {
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
           <div className="mx-auto w-16 h-16 bg-gradient-to-r from-banking-blue to-banking-light rounded-full flex items-center justify-center mb-4">
-            <span className="text-2xl font-bold text-white">TB</span>
+            <span className="text-2xl font-bold text-white">TV</span>
           </div>
           <CardTitle className="text-2xl font-bold text-banking-dark">
             {isLogin ? 'Đăng nhập' : 'Đăng ký'}
@@ -180,21 +199,21 @@ const Auth = () => {
               <>
                 {role === 'customer' && (
                   <div className="space-y-2">
-                    <Label htmlFor="phoneOrAccount">Số điện thoại / Số tài khoản</Label>
+                    <Label htmlFor="phone">Số điện thoại</Label>
                     <Input
-                      id="phoneOrAccount"
+                      id="phone"
                       type="text"
-                      value={phoneOrAccount}
-                      onChange={(e) => setPhoneOrAccount(e.target.value)}
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       required
-                      placeholder="Nhập số điện thoại hoặc số tài khoản"
+                      placeholder="Nhập số điện thoại"
                     />
                   </div>
                 )}
 
                 {role === 'consultant' && (
                   <div className="space-y-2">
-                    <Label htmlFor="employeeId">Mã nhân viên / Username</Label>
+                    <Label htmlFor="employeeId">Mã nhân viên</Label>
                     <Input
                       id="employeeId"
                       type="text"
@@ -322,7 +341,7 @@ const Auth = () => {
                         value={companyEmail}
                         onChange={(e) => setCompanyEmail(e.target.value)}
                         required
-                        placeholder="Nhập email công ty"
+                        placeholder="Nhập email công ty (email@tvbank.com.vn)"
                       />
                     </div>
 

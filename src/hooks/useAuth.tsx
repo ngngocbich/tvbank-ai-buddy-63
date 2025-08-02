@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-
+/*
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -9,6 +9,17 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string, userData?: any) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
+}
+*/
+interface AuthContextType {
+  user: User | null;
+  session: Session | null;
+  profile: any | null;
+  loading: boolean;
+  signUp: (identifier: string, password: string, userData?: any, isPhone?: boolean) => Promise<{ error: any }>;
+  signIn: (identifier: string, password: string, isPhone?: boolean) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -72,6 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  /*
   const signUp = async (email: string, password: string, userData?: any) => {
     const redirectUrl = `${window.location.origin}/`;
     
@@ -95,6 +107,49 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     
     return { error };
   };
+  */
+
+  const signUp = async (identifier: string, password: string, userData?: any, isPhone = false) => {
+  const redirectUrl = `${window.location.origin}/`;
+  let error;
+  if (isPhone) {
+    // Đăng ký bằng phone
+    ({ error } = await supabase.auth.signUp({
+      phone: identifier,
+      password,
+      options: {
+        data: userData
+      }
+    }));
+  } else {
+    // Đăng ký bằng email
+    ({ error } = await supabase.auth.signUp({
+      email: identifier,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: userData
+      }
+    }));
+  }
+  return { error };
+};
+
+const signIn = async (identifier: string, password: string, isPhone = false) => {
+  let error;
+  if (isPhone) {
+    ({ error } = await supabase.auth.signInWithPassword({
+      phone: identifier,
+      password
+    }));
+  } else {
+    ({ error } = await supabase.auth.signInWithPassword({
+      email: identifier,
+      password
+    }));
+  }
+  return { error };
+};
 
   const signOut = async () => {
     await supabase.auth.signOut();
