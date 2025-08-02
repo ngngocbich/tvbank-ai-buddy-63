@@ -21,6 +21,7 @@ const Auth = () => {
   // Customer fields
   const [email, setEmail] = useState('');
   const [phoneOrAccount, setPhoneOrAccount] = useState('');
+  // const [phoneOrAccount, setPhoneOrAccount] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [idNumber, setIdNumber] = useState('');
