@@ -49,25 +49,18 @@ LĨNH VỰC CHUYÊN MÔN:
   gemini: {
     provider: 'gemini' as const,
     apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
-    model: 'gemini-1.5-flash',
-    systemPrompt: `Bạn là TV Bank AI Assistant - trợ lý thông minh của ngân hàng TV Bank. Hãy hỗ trợ khách hàng một cách chuyên nghiệp và thân thiện.
+    model: 'gemini-1.5-pro',
+    systemPrompt: `Bạn là TV Bank AI Assistant. Hỗ trợ khách hàng về các dịch vụ ngân hàng một cách ngắn gọn và hữu ích.
 
-LĨNH VỰC CHUYÊN MÔN TV Bank:
-- Vay vốn nông nghiệp, tiểu thương, tiêu dùng có tài sản đảm bảo
-- Gửi tiết kiệm có/kỳ hạn, tích luỹ định kỳ  
-- Chuyển khoản, thanh toán nội địa
-- Thẻ ATM, Mobile Banking cơ bản, Internet Banking
-- Hỗ trợ các dịch vụ qua Quỹ Tín dụng Nhân dân
-- Tư vấn tài chính cá nhân
+DỊCH VỤ TV BANK:
+• Vay vốn: nông nghiệp, tiểu thương, tiêu dùng
+• Tiết kiệm: có kỳ hạn, không kỳ hạn, tích lũy định kỳ
+• Thanh toán: chuyển khoản, Internet Banking, Mobile Banking
+• Thẻ ATM và các dịch vụ khác
 
-NGUYÊN TẮC TRẢ LỜI:
-- Luôn lịch sự, chuyên nghiệp
-- Cung cấp thông tin hữu ích dựa trên kiến thức về ngân hàng
-- Nếu không biết thông tin cụ thể về TV Bank, hãy tham khảo CoopBank
-- Sử dụng emoji phù hợp và định dạng rõ ràng
-- Khi cần thiết, đề xuất liên hệ nhân viên`,
+Trả lời ngắn gọn, thân thiện và có emoji phù hợp.`,
     temperature: 0.7,
-    maxTokens: 4000
+    maxTokens: 1000
   }
 };
 
@@ -223,7 +216,7 @@ export default function AIIntegration() {
                         {provider === 'gemini' ? (
                           <Input
                             id={`${provider}-model`}
-                            value="gemini-1.5-flash"
+                            value="gemini-1.5-pro"
                             disabled
                             className="bg-muted"
                           />
@@ -479,16 +472,16 @@ const callGemini = async (
       if (candidate.finishReason) {
         console.warn('Finish reason:', candidate.finishReason);
         if (candidate.finishReason === 'SAFETY') {
-          throw new Error('Câu trả lời bị chặn vì lý do an toàn. Vui lòng thử câu hỏi khác.');
+          return 'Xin lỗi, tôi không thể trả lời câu hỏi này vì lý do an toàn. Vui lòng thử câu hỏi khác về dịch vụ ngân hàng.';
         } else if (candidate.finishReason === 'MAX_TOKENS') {
-          throw new Error('Câu trả lời quá dài. Vui lòng thử câu hỏi ngắn gọn hơn.');
+          return 'Xin lỗi, câu trả lời hơi dài. Bạn có thể hỏi cụ thể hơn về dịch vụ nào không?';
         }
       }
     }
     
-    // Nếu vẫn không có response hợp lệ, log lỗi và throw error thay vì fallback
+    // Nếu vẫn không có response hợp lệ, trả về response mặc định thay vì throw error
     console.error('No valid response from Gemini API:', data);
-    throw new Error('API trả về response không hợp lệ. Vui lòng thử lại sau.');
+    return 'Xin chào! Tôi là TV Bank AI Assistant. Tôi có thể hỗ trợ bạn về vay vốn, tiết kiệm, chuyển khoản và các dịch vụ ngân hàng khác. Bạn cần hỗ trợ gì?';
     
   } catch (error) {
     console.error('Gemini API error:', error);
