@@ -397,9 +397,8 @@ QUAN TRỌNG: Đừng từ chối bất kỳ câu hỏi nào. Hãy trả lời h
       ]
     });
 
-    const fullMessage = `[Khách hàng ${userType}] ${message}
-
-Hãy trả lời một cách chi tiết, đầy đủ và thân thiện. Cung cấp thông tin hữu ích và hướng dẫn cụ thể.`;
+    // Chỉ gửi tin nhắn gốc của người dùng, không lặp lại
+    const fullMessage = message;
 
     console.log('Sending message to Gemini:', fullMessage);
     
