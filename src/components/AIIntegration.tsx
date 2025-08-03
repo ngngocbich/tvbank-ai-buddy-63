@@ -339,12 +339,13 @@ const callOpenAI = async (
   return data.choices[0].message.content;
 };
 
-// Gọi Gemini API với SDK và xử lý quota exceeded
+// Gọi Gemini API với streaming để có response mượt mà
 const callGemini = async (
   message: string,
   userType: string,
   config: AIConfig,
   history?: { role: 'user' | 'assistant'; content: string }[],
+  onToken?: (token: string) => void,
   retryCount = 0
 ) => {
   try {
@@ -396,37 +397,37 @@ QUAN TRỌNG: Đừng từ chối bất kỳ câu hỏi nào. Hãy trả lời h
       ]
     });
 
-    // Xây dựng conversation history
-    const chatHistory = [];
-    if (history && history.length > 0) {
-      history.forEach(msg => {
-        chatHistory.push({
-          role: msg.role === 'user' ? 'user' : 'model',
-          parts: [{ text: msg.content }]
-        });
-      });
-    }
-
-    const chat = model.startChat({
-      history: chatHistory
-    });
-
     const fullMessage = `[Khách hàng ${userType}] ${message}
 
 Hãy trả lời một cách chi tiết, đầy đủ và thân thiện. Cung cấp thông tin hữu ích và hướng dẫn cụ thể.`;
 
     console.log('Sending message to Gemini:', fullMessage);
     
-    const result = await chat.sendMessage(fullMessage);
-    const response = await result.response;
-    const text = response.text();
+    // Sử dụng streaming nếu có callback onToken
+    if (onToken) {
+      const result = await model.generateContentStream(fullMessage);
+      let fullResponse = '';
+      
+      for await (const chunk of result.stream) {
+        const chunkText = chunk.text();
+        fullResponse += chunkText;
+        onToken(chunkText);
+      }
+      
+      return fullResponse;
+    } else {
+      // Fallback cho non-streaming
+      const result = await model.generateContent(fullMessage);
+      const response = await result.response;
+      const text = response.text();
 
-    if (!text || text.trim().length === 0) {
-      console.warn('Empty response from Gemini, using fallback');
-      return generateDetailedResponse(message, userType);
+      if (!text || text.trim().length === 0) {
+        console.warn('Empty response from Gemini, using fallback');
+        return generateDetailedResponse(message, userType);
+      }
+
+      return text;
     }
-
-    return text;
 
   } catch (error: any) {
     console.error('Gemini API Error:', error);
@@ -437,7 +438,7 @@ Hãy trả lời một cách chi tiết, đầy đủ và thân thiện. Cung c�
         const delay = (retryCount + 1) * 3000; // 3s, 6s
         console.warn(`Quota exceeded. Retrying in ${delay}ms... (attempt ${retryCount + 1}/2)`);
         await new Promise(resolve => setTimeout(resolve, delay));
-        return callGemini(message, userType, config, history, retryCount + 1);
+        return callGemini(message, userType, config, history, onToken, retryCount + 1);
       } else {
         // Trả về response mẫu thay vì lỗi
         return generateDetailedResponse(message, userType);
@@ -446,6 +447,54 @@ Hãy trả lời một cách chi tiết, đầy đủ và thân thiện. Cung c�
     
     // Với các lỗi khác, trả về response mẫu
     return generateDetailedResponse(message, userType);
+  }
+};
+
+// Export function cho streaming response
+export const generateStreamingChatResponse = async (
+  message: string, 
+  userType: string, 
+  onToken: (token: string) => void,
+  provider: 'openai' | 'gemini' = 'gemini', 
+  history?: { role: 'user' | 'assistant'; content: string }[]
+) => {
+  const storedConfig = getStoredConfig(provider);
+  
+  if (!storedConfig || !storedConfig.apiKey) {
+    // Fallback streaming simulation
+    const response = generateDetailedResponse(message, userType);
+    const words = response.split(' ');
+    
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i] + (i < words.length - 1 ? ' ' : '');
+      onToken(word);
+      await new Promise(resolve => setTimeout(resolve, 50)); // Simulate typing
+    }
+    
+    return response;
+  }
+
+  try {
+    if (provider === 'gemini') {
+      return await callGemini(message, userType, storedConfig, history, onToken);
+    } else {
+      // OpenAI streaming would go here if implemented
+      return await callOpenAI(message, userType, storedConfig, history);
+    }
+  } catch (error) {
+    console.error('AI API Error:', error);
+    
+    // Fallback streaming simulation
+    const response = generateDetailedResponse(message, userType);
+    const words = response.split(' ');
+    
+    for (let i = 0; i < words.length; i++) {
+      const word = words[i] + (i < words.length - 1 ? ' ' : '');
+      onToken(word);
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    
+    return response;
   }
 };
 

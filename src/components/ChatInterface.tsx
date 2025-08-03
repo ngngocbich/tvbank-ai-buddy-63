@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Send, Bot, User, Settings, MessageCircle, TrendingUp, Users, CreditCard, LogOut, Menu } from 'lucide-react';
 import chatbotAvatar from '@/assets/chatbot-avatar.jpg';
 import Header from '@/components/Header';
-import AIIntegration, { generateChatResponse } from '@/components/AIIntegration';
+import AIIntegration, { generateChatResponse, generateStreamingChatResponse } from '@/components/AIIntegration';
 import { useAuth } from '@/hooks/useAuth';
 
 interface Message {
@@ -421,22 +421,65 @@ export default function ChatInterface() {
       );
 
       if (isOpenEnded) {
-      // Nếu là câu hỏi mở, gửi toàn bộ history cho AI
-      const history = [
-        ...messages.map((m) => ({
-          role: m.type === 'user' ? 'user' as const : 'assistant' as const,
-          content: m.content
-        })),
-        { role: 'user' as const, content: userMessage }
-      ];
+        // Nếu là câu hỏi mở, gửi toàn bộ history cho AI với streaming
+        const history = [
+          ...messages.map((m) => ({
+            role: m.type === 'user' ? 'user' as const : 'assistant' as const,
+            content: m.content
+          })),
+          { role: 'user' as const, content: userMessage }
+        ];
 
-      // Tích hợp AI response
-      const aiResponse = await generateChatResponse(userMessage, selectedUserType, 'gemini', history);
-      addMessage(aiResponse, 'bot');
+        // Tạo message AI rỗng để streaming
+        const aiMessageId = Date.now().toString();
+        const initialAiMessage: Message = {
+          id: aiMessageId,
+          type: 'bot',
+          content: '',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, initialAiMessage]);
+
+        // Sử dụng streaming response
+        await generateStreamingChatResponse(
+          userMessage, 
+          selectedUserType,
+          (token: string) => {
+            setMessages(prev => 
+              prev.map(msg => 
+                msg.id === aiMessageId 
+                  ? { ...msg, content: msg.content + token }
+                  : msg
+              )
+            );
+          },
+          'gemini',
+          history
+        );
       } else {
-        // Nếu không, vẫn dùng AI như cũ (hoặc response tĩnh)
-        const aiResponse = await generateChatResponse(userMessage, selectedUserType);
-        addMessage(aiResponse, 'bot');
+        // Nếu không, vẫn dùng streaming cho AI response
+        const aiMessageId = Date.now().toString();
+        const initialAiMessage: Message = {
+          id: aiMessageId,
+          type: 'bot',
+          content: '',
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, initialAiMessage]);
+
+        await generateStreamingChatResponse(
+          userMessage, 
+          selectedUserType,
+          (token: string) => {
+            setMessages(prev => 
+              prev.map(msg => 
+                msg.id === aiMessageId 
+                  ? { ...msg, content: msg.content + token }
+                  : msg
+              )
+            );
+          }
+        );
       }
     } catch (error) {
       addMessage(
