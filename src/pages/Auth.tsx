@@ -50,9 +50,9 @@ const Auth = () => {
       case 'customer':
         return { phone: phone, password };
       case 'consultant':
-        return { email: employeeId, password };
+        return { email: companyEmail, password };
       case 'branch_manager':
-        return { email: managerId, password };
+        return { email: companyEmail, password };
       default:
         return { email, password };
     }
