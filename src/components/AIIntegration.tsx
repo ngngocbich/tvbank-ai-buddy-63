@@ -223,7 +223,7 @@ export default function AIIntegration() {
                         {provider === 'gemini' ? (
                           <Input
                             id={`${provider}-model`}
-                            value="gemini-2.5-pro"
+                            value="gemini-2.0-flash"
                             disabled
                             className="bg-muted"
                           />
