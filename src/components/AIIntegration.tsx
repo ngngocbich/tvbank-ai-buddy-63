@@ -449,129 +449,163 @@ Hãy trả lời một cách chi tiết, đầy đủ và thân thiện. Cung c�
   }
 };
 
-// Hàm tạo response chi tiết dựa trên context
+// Hàm tạo response thông minh dựa trên context
 const generateDetailedResponse = (message: string, userType: string) => {
   const lowerMessage = message.toLowerCase();
   
+  // Phân tích nội dung câu hỏi để đưa ra phản hồi phù hợp
+  if (lowerMessage.includes('rủi ro') || lowerMessage.includes('risk')) {
+    if (lowerMessage.includes('tín dụng') || lowerMessage.includes('credit')) {
+      return `Chào bạn! 🏦 Về rủi ro tín dụng, đây là một chủ đề quan trọng trong ngành ngân hàng. Tôi sẽ chia sẻ thông tin chi tiết:
+
+**🔍 Các loại rủi ro tín dụng chính:**
+
+**1. Rủi ro không trả được nợ (Default Risk):**
+• Khách hàng không có khả năng trả nợ gốc và lãi đúng hạn
+• Nguyên nhân: Mất thu nhập, phá sản, tình hình kinh tế xấu
+• Biện pháp: Thẩm định kỹ hồ sơ, đòi hỏi tài sản đảm bảo
+
+**2. Rủi ro thanh khoản:**
+• Ngân hàng thiếu tiền mặt để đáp ứng nhu cầu rút tiền
+• Xảy ra khi nhiều khoản vay có vấn đề cùng lúc
+• Quản lý: Duy trì tỷ lệ thanh khoản an toàn
+
+**3. Rủi ro lãi suất:**
+• Biến động lãi suất thị trường ảnh hưởng đến lợi nhuận
+• Tác động: Chênh lệch thu - chi thay đổi
+• Phòng ngừa: Sử dụng công cụ phái sinh tài chính
+
+**📊 Phương pháp đánh giá rủi ro:**
+• Credit scoring - chấm điểm tín dụng
+• Phân tích tài chính khách hàng
+• Thẩm định tài sản đảm bảo
+• Kiểm tra lịch sử tín dụng CIC
+
+Bạn muốn tìm hiểu sâu hơn về khía cạnh nào của rủi ro tín dụng? 🤔`;
+    }
+    
+    return `Chào bạn! ⚠️ Rủi ro là một khái niệm quan trọng trong mọi hoạt động. Tôi sẽ chia sẻ về các loại rủi ro phổ biến:
+
+**💼 Rủi ro trong đầu tư:**
+• Rủi ro thị trường: Giá cả biến động
+• Rủi ro lạm phát: Sức mua giảm
+• Rủi ro thanh khoản: Khó bán tài sản
+
+**🏢 Rủi ro trong kinh doanh:**
+• Rủi ro vận hành: Sự cố trong hoạt động
+• Rủi ro tài chính: Thiếu vốn, nợ xấu
+• Rủi ro pháp lý: Thay đổi quy định
+
+**🔐 Cách quản lý rủi ro:**
+• Đa dạng hóa danh mục đầu tư
+• Mua bảo hiểm phù hợp
+• Xây dựng quỹ dự phòng
+• Theo dõi và đánh giá thường xuyên
+
+Tại TV Bank, chúng tôi cung cấp các sản phẩm bảo hiểm và tư vấn quản lý rủi ro tài chính. Bạn có muốn tìm hiểu thêm không? 📞`;
+  }
+
+  if (lowerMessage.includes('tư vấn') || lowerMessage.includes('tu van')) {
+    return `Chào bạn! 💡 Tôi rất vui được tư vấn cho bạn! Hãy cho tôi biết bạn cần tư vấn về vấn đề gì:
+
+**🏦 Tư vấn tài chính ngân hàng:**
+• Lựa chọn sản phẩm vay phù hợp
+• Kế hoạch tiết kiệm và đầu tư
+• Quản lý dòng tiền cá nhân/doanh nghiệp
+• Tối ưu hóa chi phí tài chính
+
+**💼 Tư vấn kinh doanh:**
+• Lập kế hoạch kinh doanh
+• Quản lý rủi ro trong kinh doanh
+• Tìm kiếm nguồn vốn phù hợp
+• Phát triển mô hình kinh doanh
+
+**📈 Tư vấn đầu tư:**
+• Phân tích cơ hội đầu tư
+• Đa dạng hóa danh mục
+• Đánh giá rủi ro - lợi nhuận
+• Chiến lược đầu tư dài hạn
+
+**🎯 Tư vấn cá nhân:**
+• Quy hoạch tài chính cá nhân
+• Chuẩn bị quỹ hưu trí
+• Bảo hiểm và bảo vệ tài sản
+• Giáo dục tài chính
+
+Bạn muốn tư vấn về lĩnh vực nào cụ thể? Tôi sẽ đưa ra lời khuyên chi tiết nhất! 🤝`;
+  }
+
+  if (lowerMessage.includes('xin chào') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+    return `Chào bạn! 👋 Rất vui được gặp bạn! Tôi là AI Assistant của TV Bank - ngân hàng số hàng đầu Việt Nam.
+
+**✨ Tôi có thể giúp bạn:**
+• Trả lời mọi câu hỏi về dịch vụ ngân hàng
+• Tư vấn tài chính cá nhân và doanh nghiệp  
+• Hướng dẫn thủ tục và quy trình
+• Chia sẻ kiến thức về đầu tư, tiết kiệm
+• Trò chuyện về các chủ đề khác nhau
+
+**🎯 Bạn có thể hỏi tôi về:**
+- Vay vốn và tín dụng 💰
+- Tiết kiệm và đầu tư 📈  
+- Dịch vụ thanh toán 💳
+- Quản lý rủi ro ⚠️
+- Hoặc bất kỳ chủ đề nào khác! 🌟
+
+Hôm nay bạn cần tôi hỗ trợ điều gì? Cứ thoải mái chia sẻ nhé! 😊`;
+  }
+
   if (lowerMessage.includes('vay') || lowerMessage.includes('vốn') || lowerMessage.includes('tín dụng')) {
-    return `Chào bạn! 👋 Tôi là TV Bank AI Assistant, rất vui được hỗ trợ bạn về thủ tục vay vốn. Để giúp bạn hiểu rõ quy trình, tôi sẽ chia sẻ thông tin chi tiết như sau:
+    return `Chào bạn! 👋 Tôi sẽ hỗ trợ bạn về dịch vụ vay vốn tại TV Bank:
 
-**1. Các loại hình vay vốn tại TV Bank:**
+**💰 Các sản phẩm vay vốn:**
+• Vay tín chấp: Không cần tài sản đảm bảo
+• Vay thế chấp: Lãi suất ưu đãi với TSĐB
+• Vay kinh doanh: Hỗ trợ phát triển doanh nghiệp
+• Vay nông nghiệp: Lãi suất từ 6.5%/năm
 
-Trước khi đi vào thủ tục, bạn cần xác định loại hình vay phù hợp với nhu cầu của mình. TV Bank cung cấp nhiều sản phẩm vay khác nhau, bao gồm:
+**📋 Thủ tục đơn giản:**
+1. Chuẩn bị hồ sơ (CMND, chứng minh thu nhập)
+2. Nộp hồ sơ tại chi nhánh hoặc online
+3. Thẩm định và phê duyệt trong 5-7 ngày
+4. Giải ngân nhanh chóng
 
-• **Vay tín chấp:** Dành cho mục đích tiêu dùng cá nhân, không cần tài sản đảm bảo.
-• **Vay thế chấp:** Cần có tài sản đảm bảo như nhà đất, xe cộ. Thường được sử dụng cho mục đích mua nhà, mua xe, kinh doanh.
-• **Vay kinh doanh:** Dành cho doanh nghiệp hoặc hộ kinh doanh cá thể.
-• **Vay nông nghiệp:** Hỗ trợ các hoạt động sản xuất nông nghiệp với lãi suất ưu đãi.
-
-**2. Thủ tục vay vốn chi tiết:**
-
-📝 **Bước 1: Chuẩn bị hồ sơ**
-- Giấy tờ tùy thân: CMND/CCCD, hộ khẩu (bản sao công chứng)
-- Giấy tờ chứng minh thu nhập: Hợp đồng lao động, sao kê lương 3-6 tháng gần nhất
-- Giấy tờ liên quan đến tài sản đảm bảo (nếu có)
-
-🏦 **Bước 2: Nộp hồ sơ và thẩm định**
-- Nộp hồ sơ tại chi nhánh gần nhất
-- Ngân hàng thẩm định trong vòng 5-7 ngày làm việc
-
-✅ **Bước 3: Phê duyệt và giải ngân**
-- Nhận thông báo kết quả phê duyệt
-- Ký hợp đồng tín dụng
-- Giải ngân theo thỏa thuận
-
-Bạn có cần tư vấn thêm về loại hình vay nào cụ thể không? 🤔`;
+Bạn quan tâm đến loại hình vay nào? Tôi sẽ tư vấn chi tiết! 🤝`;
   }
   
   if (lowerMessage.includes('tiết kiệm') || lowerMessage.includes('gửi') || lowerMessage.includes('lãi suất')) {
-    return `Chào bạn! 💰 Cảm ơn bạn quan tâm đến dịch vụ tiết kiệm của TV Bank. Chúng tôi có nhiều sản phẩm tiết kiệm hấp dẫn:
+    return `Chào bạn! 💰 TV Bank có nhiều sản phẩm tiết kiệm hấp dẫn:
 
-**🏦 Các loại hình tiết kiệm tại TV Bank:**
+**📊 Lãi suất cạnh tranh:**
+• Không kỳ hạn: 0.5%/năm
+• Có kỳ hạn 6 tháng: 5.8%/năm
+• Có kỳ hạn 12 tháng: 6.5%/năm
+• Tích lũy định kỳ: 6.8%/năm
 
-**1. Tiết kiệm không kỳ hạn:**
-• Linh hoạt rút tiền bất cứ lúc nào
-• Lãi suất: 0.5%/năm
-• Không có số tiền tối thiểu
-• Phù hợp cho việc dự phòng khẩn cấp
+**✨ Ưu điểm:**
+• Linh hoạt rút tiền
+• Lãi suất cao, ổn định
+• Thủ tục nhanh gọn
+• Bảo mật tuyệt đối
 
-**2. Tiết kiệm có kỳ hạn:**
-• Kỳ hạn 1 tháng: 4.5%/năm
-• Kỳ hạn 3 tháng: 5.2%/năm  
-• Kỳ hạn 6 tháng: 5.8%/năm
-• Kỳ hạn 12 tháng: 6.5%/năm
-• Số tiền tối thiểu: 500.000 VNĐ
-
-**3. Tiết kiệm tích lũy định kỳ:**
-• Gửi định kỳ hàng tháng từ 200.000 VNĐ
-• Lãi suất ưu đãi: 6.8%/năm
-• Thời gian tích lũy linh hoạt từ 12-60 tháng
-• Có thể rút trước khi đến hạn (tính lãi theo kỳ hạn ngắn hơn)
-
-**📋 Thủ tục mở sổ tiết kiệm:**
-1. Mang CMND/CCCD gốc
-2. Điền phiếu gửi tiền
-3. Nộp tiền mặt hoặc chuyển khoản
-4. Nhận sổ tiết kiệm và hợp đồng
-
-Bạn muốn tìm hiểu thêm về loại tiết kiệm nào? Hay cần tư vấn về số tiền và kỳ hạn phù hợp? 😊`;
+Bạn muốn tìm hiểu về sản phẩm tiết kiệm nào? 😊`;
   }
 
-  if (lowerMessage.includes('chuyển khoản') || lowerMessage.includes('internet banking') || lowerMessage.includes('mobile banking')) {
-    return `Xin chào! 💳 TV Bank cung cấp đa dạng dịch vụ thanh toán hiện đại và tiện lợi:
+  // Phản hồi chung cho các câu hỏi khác
+  return `Chào bạn! 👋 Cảm ơn bạn đã liên hệ với TV Bank AI Assistant. 
 
-**🌐 Internet Banking TV Bank:**
+Tôi có thể giúp bạn về:
+• Dịch vụ ngân hàng và tài chính 🏦
+• Tư vấn và giải đáp thắc mắc 💡  
+• Thông tin sản phẩm dịch vụ 📋
+• Và nhiều chủ đề khác nữa! 🌟
 
-**Tính năng chính:**
-• Chuyển khoản trong và ngoài ngân hàng 24/7
-• Thanh toán hóa đơn điện, nước, internet, điện thoại
-• Nạp tiền điện thoại và thẻ game
-• Kiểm tra số dư và lịch sử giao dịch
-• Mở sổ tiết kiệm online
+Bạn có câu hỏi gì cụ thể? Tôi sẽ trả lời một cách chi tiết nhất! 😊
 
-**Phí dịch vụ:**
-• Chuyển khoản nội bộ TV Bank: MIỄN PHÍ
-• Chuyển khoản liên ngân hàng: 5.500 VNĐ/giao dịch
-• Thanh toán hóa đơn: 2.200 VNĐ/giao dịch
-
-**📱 Mobile Banking TV Bank:**
-• Giao diện thân thiện, dễ sử dụng
-• Tất cả tính năng của Internet Banking
-• Đăng nhập bằng vân tay/Face ID
-• Nhận thông báo giao dịch realtime
-• QR Pay - thanh toán bằng mã QR
-
-**🔒 Bảo mật:**
-• Xác thực 2 lớp (OTP qua SMS)
-• Mã hóa SSL 256-bit
-• Tự động đăng xuất sau 10 phút không hoạt động
-• Thông báo mọi giao dịch qua SMS
-
-**📋 Đăng ký dịch vụ:**
-1. Mang CMND + thẻ ATM đến chi nhánh
-2. Điền form đăng ký
-3. Nhận mã đăng nhập qua SMS
-4. Tải app TV Bank Mobile và kích hoạt
-
-Bạn muốn đăng ký dịch vụ nào? Tôi có thể hướng dẫn chi tiết hơn! 📞`;
-  }
-
-  // Response mặc định
-  return `Chào bạn! 👋 Tôi là AI Assistant của TV Bank, sẵn sàng hỗ trợ bạn 24/7.
-
-**🏦 Dịch vụ chính của TV Bank:**
-
-💰 **Vay vốn:** Tín chấp, thế chấp, kinh doanh, nông nghiệp với lãi suất từ 6.5%/năm
-💎 **Tiết kiệm:** Có/không kỳ hạn, lãi suất lên đến 6.8%/năm  
-💳 **Thanh toán:** Internet Banking, Mobile Banking, chuyển khoản 24/7
-🎯 **Thẻ ATM:** Rút tiền miễn phí tại hơn 16.000 ATM toàn quốc
-
-**📞 Liên hệ hỗ trợ:**
+**📞 Liên hệ nhanh:**
 • Hotline: 1900 6060 (24/7)
 • Website: tvbank.com.vn
-• Hơn 200 chi nhánh/phòng giao dịch
-
-Bạn muốn tìm hiểu dịch vụ nào cụ thể? Tôi sẽ tư vấn chi tiết cho bạn! ✨`;
+• Hơn 200 chi nhánh toàn quốc`;
 };
 
 // Export function để lưu cấu hình từ component
