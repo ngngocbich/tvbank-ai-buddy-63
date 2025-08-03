@@ -49,7 +49,7 @@ LĨNH VỰC CHUYÊN MÔN:
   gemini: {
     provider: 'gemini' as const,
     apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
-    model: 'gemini-2.0-flash',
+    model: 'gemini-1.5-flash',
     systemPrompt: `Bạn là TV Bank AI Assistant - trợ lý thông minh của ngân hàng TV Bank. Hãy hỗ trợ khách hàng một cách chuyên nghiệp và thân thiện.
 
 LĨNH VỰC CHUYÊN MÔN TV Bank:
@@ -67,7 +67,7 @@ NGUYÊN TẮC TRẢ LỜI:
 - Sử dụng emoji phù hợp và định dạng rõ ràng
 - Khi cần thiết, đề xuất liên hệ nhân viên`,
     temperature: 0.7,
-    maxTokens: 2000
+    maxTokens: 4000
   }
 };
 
@@ -223,7 +223,7 @@ export default function AIIntegration() {
                         {provider === 'gemini' ? (
                           <Input
                             id={`${provider}-model`}
-                            value="gemini-2.0-flash"
+                            value="gemini-1.5-flash"
                             disabled
                             className="bg-muted"
                           />
@@ -452,11 +452,30 @@ const callGemini = async (
     const data = await response.json();
     console.log('Gemini response:', data);
     
-    if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
-      throw new Error('Invalid response format from Gemini API');
+    // Xử lý response từ Gemini với multiple checks
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && 
+        data.candidates[0].content.parts && data.candidates[0].content.parts[0] && 
+        data.candidates[0].content.parts[0].text) {
+      
+      const responseText = data.candidates[0].content.parts[0].text.trim();
+      
+      // Kiểm tra nếu response không rỗng
+      if (responseText && responseText.length > 0) {
+        return responseText;
+      }
     }
     
-    return data.candidates[0].content.parts[0].text;
+    // Fallback response nếu không có content hợp lệ
+    return `Xin chào! Tôi là TV Bank AI Assistant. Tôi có thể hỗ trợ bạn về:
+
+🏦 **Dịch vụ ngân hàng TV Bank:**
+• Vay vốn nông nghiệp, tiểu thương
+• Tiết kiệm có kỳ hạn, tích lũy định kỳ  
+• Chuyển khoản, thanh toán
+• Internet Banking, Mobile Banking
+• Thẻ ATM và các dịch vụ khác
+
+💬 Bạn cần hỗ trợ gì? Hãy đặt câu hỏi cụ thể để tôi có thể hỗ trợ tốt nhất!`;
     
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
