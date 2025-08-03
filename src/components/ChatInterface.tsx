@@ -231,6 +231,28 @@ const chatScenarios: ChatScenario[] = [
 
   // Quản lý scenarios
   {
+    id: 'customer-overview',
+    title: 'Tổng quan khách hàng',
+    userType: 'manager',
+    icon: <Users className="w-4 h-4" />,
+    description: 'Phân tích dữ liệu khách hàng',
+    initialMessage: 'Tôi cần báo cáo phân tích khách hàng theo nhóm thu nhập và vùng miền.',
+    responses: [
+      '👥 **Báo cáo Tổng quan Khách hàng - Hệ thống TV Bank (Tháng 07/2025):**',
+
+      '📊 **Tổng số khách hàng:**\n- 185,320 khách hàng đang hoạt động\n- Trong đó:\n  + Hộ gia đình: 74%\n  + Tiểu thương & HTX: 18%\n  + Cán bộ, công nhân viên chức: 8%',
+
+      '🌍 **Phân bố địa lý:**\n- Miền Bắc: 46%\n- Miền Trung: 33%\n- Miền Nam: 21%\n- Tỷ lệ sử dụng dịch vụ qua Mobile App: 41% (tăng 10% so với cùng kỳ)',
+
+      '💼 **Phân loại theo nhu cầu:**\n- Gửi tiết kiệm kỳ hạn: 68%\n- Vay tiêu dùng nhỏ (<100 triệu): 49%\n- Vay sản xuất nông nghiệp: 27%\n- Nhận tiền qua thẻ ATM: 62%',
+
+      '📈 **Xu hướng nổi bật:**\n- Số lượng khách mới qua tổ vay vốn tăng 19%\n- Nhu cầu chuyển khoản nội địa tăng mạnh tại vùng sâu\n- Giao dịch không tiền mặt tăng đều 7% mỗi tháng',
+
+      'Bạn muốn phân tích thêm về nhóm nào? (Ví dụ: theo ngành nghề, độ tuổi, sản phẩm sử dụng...)'
+    ]
+  },
+
+  {
     id: 'branch-performance',
     title: 'Báo cáo hiệu suất chi nhánh',
     userType: 'manager',
@@ -252,27 +274,7 @@ const chatScenarios: ChatScenario[] = [
 
     ]
   },
-  {
-    id: 'customer-overview',
-    title: 'Tổng quan khách hàng',
-    userType: 'manager',
-    icon: <Users className="w-4 h-4" />,
-    description: 'Phân tích đối tượng khách hàng và xu hướng',
-    initialMessage: 'Tôi cần báo cáo phân tích khách hàng theo nhóm thu nhập và vùng miền.',
-    responses: [
-      '👥 **Báo cáo Tổng quan Khách hàng - Hệ thống TV Bank (Tháng 07/2025):**',
-
-      '📊 **Tổng số khách hàng:**\n- 185,320 khách hàng đang hoạt động\n- Trong đó:\n  + Hộ gia đình: 74%\n  + Tiểu thương & HTX: 18%\n  + Cán bộ, công nhân viên chức: 8%',
-
-      '🌍 **Phân bố địa lý:**\n- Miền Bắc: 46%\n- Miền Trung: 33%\n- Miền Nam: 21%\n- Tỷ lệ sử dụng dịch vụ qua Mobile App: 41% (tăng 10% so với cùng kỳ)',
-
-      '💼 **Phân loại theo nhu cầu:**\n- Gửi tiết kiệm kỳ hạn: 68%\n- Vay tiêu dùng nhỏ (<100 triệu): 49%\n- Vay sản xuất nông nghiệp: 27%\n- Nhận tiền qua thẻ ATM: 62%',
-
-      '📈 **Xu hướng nổi bật:**\n- Số lượng khách mới qua tổ vay vốn tăng 19%\n- Nhu cầu chuyển khoản nội địa tăng mạnh tại vùng sâu\n- Giao dịch không tiền mặt tăng đều 7% mỗi tháng',
-
-      'Bạn muốn phân tích thêm về nhóm nào? (Ví dụ: theo ngành nghề, độ tuổi, sản phẩm sử dụng...)'
-    ]
-  },
+  
   {
     id: 'financial-dashboard',
     title: 'Dashboard tài chính',
