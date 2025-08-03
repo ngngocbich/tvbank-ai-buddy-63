@@ -61,7 +61,6 @@ DỊCH VỤ TV BANK:
 Trả lời ngắn gọn, thân thiện và có emoji phù hợp.`,
     temperature: 0.7,
     maxTokens: 1000
->>>>>>> 9aa9cc434dc8bf3ad705ab4f580006670b77f985
   }
 };
 
@@ -123,18 +122,13 @@ export default function AIIntegration() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{
-              role: 'user',
-              parts: [{ text: 'Hello, test connection' }] 
-            }], */
             contents: [{ 
               parts: [{ text: 'Test connection' }] 
-            }]
-            /*
+            }],
             generationConfig: {
               temperature: 0.1,
               maxOutputTokens: 50
-            } */
+            }
           })
         });
         
@@ -324,7 +318,7 @@ export const generateChatResponse = async (message: string, userType: string, pr
     if (provider === 'openai') {
       return await callOpenAI(message, userType, storedConfig, history);
     } else {
-      return await callGemini(message, userType, storedConfig, history);
+      return await callGemini(message, userType, storedConfig);
     }
   } catch (error) {
     console.error('AI API Error:', error);
@@ -501,28 +495,84 @@ const callGemini = async (
 */
 
 const callGemini = async (message: string, userType: string, config: AIConfig) => {
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{
-        parts: [{
-          text: `${config.systemPrompt}\n\nNgười dùng: [${userType}] ${message}`
-        }]
-      }],
-      generationConfig: {
-        temperature: config.temperature,
-        maxOutputTokens: config.maxTokens
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        systemInstruction: {
+          parts: [{ text: config.systemPrompt }]
+        },
+        contents: [{
+          role: 'user',
+          parts: [{
+            text: `[${userType}] ${message}`
+          }]
+        }],
+        generationConfig: {
+          temperature: config.temperature,
+          maxOutputTokens: config.maxTokens,
+          topP: 0.9,
+          topK: 40
+        },
+        safetySettings: [
+          {
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_NONE'
+          },
+          {
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_NONE'
+          },
+          {
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_NONE'
+          },
+          {
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_NONE'
+          }
+        ]
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Gemini API Error:', response.status, errorText);
+      throw new Error(`Gemini API failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Gemini response:', data);
+
+    // Xử lý response từ Gemini
+    if (data.candidates && data.candidates.length > 0) {
+      const candidate = data.candidates[0];
+      
+      if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
+        const responseText = candidate.content.parts[0].text;
+        if (responseText && responseText.trim().length > 0) {
+          return responseText.trim();
+        }
       }
-    })
-  });
+      
+      // Xử lý các trường hợp finishReason
+      if (candidate.finishReason === 'SAFETY') {
+        return 'Tôi hiểu câu hỏi của bạn về dịch vụ ngân hàng. Hãy để tôi hỗ trợ bạn tìm hiểu về các sản phẩm vay vốn, tiết kiệm hay chuyển khoản của TV Bank. Bạn quan tâm đến dịch vụ nào cụ thể? 😊';
+      }
+      
+      if (candidate.finishReason === 'MAX_TOKENS') {
+        return 'Câu hỏi của bạn khá chi tiết! Tôi có thể giúp bạn về dịch vụ ngân hàng cụ thể nào - vay vốn, tiết kiệm, hay chuyển khoản? 💰';
+      }
+    }
 
-  if (!response.ok) {
-    throw new Error('Gemini API failed');
+    // Fallback response
+    return 'Xin chào! Tôi là AI Assistant của TV Bank. Tôi có thể hỗ trợ bạn về các dịch vụ vay vốn, tiết kiệm, chuyển khoản và nhiều dịch vụ ngân hàng khác. Bạn cần hỗ trợ gì ạ? 🏦';
+    
+  } catch (error) {
+    console.error('Gemini API Error:', error);
+    throw error;
   }
-
-  const data = await response.json();
-  return data.candidates[0].content.parts[0].text;
 };
 
 // Fallback response khi API không khả dụng
