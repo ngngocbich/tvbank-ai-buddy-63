@@ -45,7 +45,7 @@ LĨNH VỰC CHUYÊN MÔN:
   },
   gemini: {
     provider: 'gemini' as const,
-    apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
+    apiKey: '',
     model: 'gemini-1.5-flash',
     systemPrompt: `Bạn là TV Bank AI Assistant, một trợ lý thông minh hỗ trợ khách hàng về các dịch vụ ngân hàng.
 
@@ -69,7 +69,7 @@ export default function AIIntegration() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<Record<string, 'idle' | 'connected' | 'error'>>({
     openai: 'idle',
-    gemini: 'connected' // Mặc định gemini đã connected
+    gemini: 'idle' // Đổi thành idle vì không có API key mặc định
   });
   const { toast } = useToast();
 

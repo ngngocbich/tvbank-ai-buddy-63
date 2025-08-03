@@ -5,10 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Send, Bot, User, Settings, MessageCircle, TrendingUp, Users, CreditCard, LogOut, Menu } from 'lucide-react';
+import { Send, Bot, User, Settings, MessageCircle, TrendingUp, Users, CreditCard, LogOut, Menu, Key } from 'lucide-react';
 import chatbotAvatar from '@/assets/chatbot-avatar.jpg';
 import Header from '@/components/Header';
 import AIIntegration, { generateChatResponse, generateStreamingChatResponse } from '@/components/AIIntegration';
+import APIKeySetup from '@/components/APIKeySetup';
 import { useAuth } from '@/hooks/useAuth';
 
 interface Message {
@@ -348,6 +349,8 @@ export default function ChatInterface() {
   const [selectedUserType, setSelectedUserType] = useState<string>('customer');
   const [isTyping, setIsTyping] = useState(false);
   const [showAIConfig, setShowAIConfig] = useState(false);
+  const [showAPIKeySetup, setShowAPIKeySetup] = useState(false);
+  const [hasAPIKey, setHasAPIKey] = useState(false);
   
   // Listen for AI config toggle event
   useEffect(() => {
@@ -358,8 +361,21 @@ export default function ChatInterface() {
     window.addEventListener('toggleAIConfig', handleToggleAIConfig);
     return () => window.removeEventListener('toggleAIConfig', handleToggleAIConfig);
   }, []);
+  
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Kiểm tra API key khi component mount
+  useEffect(() => {
+    const geminiKey = localStorage.getItem('tvbank-gemini-api-key');
+    const openaiKey = localStorage.getItem('tvbank-openai-api-key');
+    setHasAPIKey(!!(geminiKey || openaiKey));
+  }, []);
+
+  const handleApiKeySet = (provider: 'openai' | 'gemini', apiKey: string) => {
+    setHasAPIKey(true);
+    setShowAPIKeySetup(false);
+  };
 
   // Map user role to chat type
   const userRoleMapping = {
@@ -407,6 +423,12 @@ export default function ChatInterface() {
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
+    
+    // Kiểm tra API key trước khi gửi
+    if (!hasAPIKey) {
+      setShowAPIKeySetup(true);
+      return;
+    }
     
     const userMessage = inputMessage;
     addMessage(userMessage, 'user');
