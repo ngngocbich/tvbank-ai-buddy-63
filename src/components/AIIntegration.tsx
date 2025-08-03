@@ -414,8 +414,10 @@ const callGemini = async (
           generationConfig: {
             temperature: config.temperature,
             maxOutputTokens: config.maxTokens,
-            topP: 0.8,
-            topK: 10
+            topP: 0.9,
+            topK: 40,
+            candidateCount: 1,
+            stopSequences: []
           }
         })
       }
@@ -452,35 +454,50 @@ const callGemini = async (
     const data = await response.json();
     console.log('Gemini response:', data);
     
-    // Xử lý response từ Gemini với multiple checks
-    if (data.candidates && data.candidates[0] && data.candidates[0].content && 
-        data.candidates[0].content.parts && data.candidates[0].content.parts[0] && 
-        data.candidates[0].content.parts[0].text) {
+    // Xử lý response từ Gemini - kiểm tra kỹ lưỡng
+    console.log('Full Gemini response data:', JSON.stringify(data, null, 2));
+    
+    if (data.candidates && Array.isArray(data.candidates) && data.candidates.length > 0) {
+      const candidate = data.candidates[0];
+      console.log('First candidate:', candidate);
       
-      const responseText = data.candidates[0].content.parts[0].text.trim();
+      if (candidate.content && candidate.content.parts && Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
+        const firstPart = candidate.content.parts[0];
+        console.log('First part:', firstPart);
+        
+        if (firstPart.text && typeof firstPart.text === 'string') {
+          const responseText = firstPart.text.trim();
+          console.log('Response text:', responseText);
+          
+          if (responseText.length > 0) {
+            return responseText;
+          }
+        }
+      }
       
-      // Kiểm tra nếu response không rỗng
-      if (responseText && responseText.length > 0) {
-        return responseText;
+      // Kiểm tra finishReason để hiểu tại sao không có response
+      if (candidate.finishReason) {
+        console.warn('Finish reason:', candidate.finishReason);
+        if (candidate.finishReason === 'SAFETY') {
+          throw new Error('Câu trả lời bị chặn vì lý do an toàn. Vui lòng thử câu hỏi khác.');
+        } else if (candidate.finishReason === 'MAX_TOKENS') {
+          throw new Error('Câu trả lời quá dài. Vui lòng thử câu hỏi ngắn gọn hơn.');
+        }
       }
     }
     
-    // Fallback response nếu không có content hợp lệ
-    return `Xin chào! Tôi là TV Bank AI Assistant. Tôi có thể hỗ trợ bạn về:
-
-🏦 **Dịch vụ ngân hàng TV Bank:**
-• Vay vốn nông nghiệp, tiểu thương
-• Tiết kiệm có kỳ hạn, tích lũy định kỳ  
-• Chuyển khoản, thanh toán
-• Internet Banking, Mobile Banking
-• Thẻ ATM và các dịch vụ khác
-
-💬 Bạn cần hỗ trợ gì? Hãy đặt câu hỏi cụ thể để tôi có thể hỗ trợ tốt nhất!`;
+    // Nếu vẫn không có response hợp lệ, log lỗi và throw error thay vì fallback
+    console.error('No valid response from Gemini API:', data);
+    throw new Error('API trả về response không hợp lệ. Vui lòng thử lại sau.');
     
   } catch (error) {
+    console.error('Gemini API error:', error);
+    
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Network error. Please check your internet connection.');
+      throw new Error('Lỗi kết nối mạng. Vui lòng kiểm tra internet và thử lại.');
     }
+    
+    // Throw the original error để hiển thị fallback response trong UI
     throw error;
   }
 };
