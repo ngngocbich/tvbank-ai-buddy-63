@@ -49,7 +49,7 @@ LĨNH VỰC CHUYÊN MÔN:
   gemini: {
     provider: 'gemini' as const,
     apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
-    model: 'gemini-2.5-pro',
+    model: 'gemini-2.0-flash',
     systemPrompt: `Bạn là TV Bank AI Assistant - trợ lý thông minh của ngân hàng TV Bank. Hãy hỗ trợ khách hàng một cách chuyên nghiệp và thân thiện.
 
 LĨNH VỰC CHUYÊN MÔN TV Bank:
