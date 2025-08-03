@@ -59,7 +59,7 @@ const chatScenarios: ChatScenario[] = [
       '2. Mobile Banking: Sử dụng app TV Bank trên điện thoại',
       '3. SMS Banking: Soạn tin "SD [số tài khoản]" gửi 8168',
       '4. ATM: Sử dụng thẻ ATM tại bất kỳ cây ATM nào của TV Bank',
-      'Bạn cần hỗ trợ thêm về cách nào cụ thể không?'',
+      'Bạn cần hỗ trợ thêm về cách nào cụ thể không?',
       'Ngoài ra, bạn có thể tham khảo các sản phẩm khác của TV Bank như:',
       '- 🌟 **Tiết kiệm online** với lãi suất ưu đãi.',
       '- 💳 **Thẻ tín dụng** với hoàn tiền và ưu đãi mua sắm.',
@@ -88,6 +88,7 @@ const chatScenarios: ChatScenario[] = [
     '- 📲 **Internet/Mobile Banking**: Chuyển khoản, thanh toán hóa đơn, nạp tiền nhanh chóng.',
     '- 🔐 **Bảo hiểm tích hợp ngân hàng**: Bảo vệ tài chính và đầu tư dài hạn.',
     'Nếu bạn quan tâm đến bất kỳ dịch vụ nào, hãy cho mình biết để được hỗ trợ thêm nhé!'
+    ]
   },
   {
     id: 'savings-investment',
