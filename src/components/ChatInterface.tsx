@@ -280,7 +280,7 @@ const chatScenarios: ChatScenario[] = [
 
       '⚡ **Hiệu suất vận hành:**\n- Thời gian xử lý hồ sơ vay: 2.9 ngày (rút ngắn 0.6 ngày)\n- Nợ xấu dưới 1% (trong kiểm soát)\n- Hỗ trợ vay vốn ưu đãi theo chính sách xã: 31 hồ sơ thành công',
 
-      '🏅 **Xếp hạng nội bộ:** #2/8 chi nhánh miền Trung (tiêu chí: tăng trưởng bền vững, chất lượng dịch vụ, an toàn tín dụng)',
+      '🏅 **Xếp hạng nội bộ:** #2/8 chi nhánh miền Bắc (tiêu chí: tăng trưởng bền vững, chất lượng dịch vụ, an toàn tín dụng)',
 
       'Bạn muốn xem chi tiết chỉ tiêu nào hơn? (ví dụ: tỷ lệ cho vay hộ gia đình, năng suất nhân viên, nợ quá hạn...)'
 
@@ -289,13 +289,13 @@ const chatScenarios: ChatScenario[] = [
   
   {
     id: 'financial-dashboard',
-    title: 'Dashboard tài chính',
+    title: 'Báo cáo tài chính của ngân hàng',
     userType: 'manager',
     icon: <TrendingUp className="w-4 h-4" />,
     description: 'Tổng hợp tài chính và phân tích dòng vốn toàn hệ thống',
     initialMessage: 'Cần xem báo cáo tài chính tổng thể của ngân hàng trong quý 1/2025.',
     responses: [
-      '📈 **Dashboard Tài chính – Quý 1/2025:**',
+      '📈 **Báo cáo Tài chính – Quý 1/2025:**',
 
       '💰 **Tổng quan:**\n- Tổng tài sản: 9,850 tỷ VND (tăng 6.5% so với Q4/2024)\n- Dư nợ tín dụng: 7,320 tỷ VND\n- Huy động vốn từ dân cư: 7,860 tỷ VND\n- Vốn điều lệ: 980 tỷ VND',
 
