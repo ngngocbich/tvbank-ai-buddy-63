@@ -363,6 +363,7 @@ export default function ChatInterface() {
   const [showAIConfig, setShowAIConfig] = useState(false);
   const [showAPIKeySetup, setShowAPIKeySetup] = useState(false);
   const [hasAPIKey, setHasAPIKey] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(false);
   
   // Listen for AI config toggle event
   useEffect(() => {
@@ -445,16 +446,32 @@ export default function ChatInterface() {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
     
+// Thêm flag kiểm tra đang xử lý
+  if (isTyping) return;
+
+    if (messages[messages.length - 1]?.scenario) return;
+
     // Kiểm tra API key trước khi gửi
     if (!hasAPIKey) {
       setShowAPIKeySetup(true);
       return;
     }
-    
+
     const userMessage = inputMessage;
+      setMessages(prev => [...prev, {
+    id: Date.now().toString(),
+    type: 'user',
+    content: userMessage,
+    timestamp: new Date()
+  }]);
+  
+  setInputMessage(''); // Xóa input ngay lập tức
+  setIsTyping(true);
+    
+    /*const userMessage = inputMessage;
     addMessage(userMessage, 'user');
     setInputMessage('');
-    setIsTyping(true);
+    setIsTyping(true); */
     
     try {
       // Lấy tin nhắn cuối cùng của bot
