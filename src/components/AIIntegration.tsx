@@ -46,7 +46,7 @@ LĨNH VỰC CHUYÊN MÔN:
   gemini: {
     provider: 'gemini' as const,
     apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
-    model: 'gemini-1.5-pro',
+    model: 'gemini-1.5-flash',
     systemPrompt: `Bạn là TV Bank AI Assistant, một trợ lý thông minh hỗ trợ khách hàng về các dịch vụ ngân hàng.
 
 QUAN TRỌNG: Luôn trả lời đầy đủ, chi tiết, và dài. Cung cấp thông tin hướng dẫn cụ thể từng bước. Sử dụng emoji phù hợp để làm cho câu trả lời thân thiện hơn.
@@ -434,20 +434,83 @@ Hãy trả lời một cách chi tiết, đầy đủ và thân thiện. Cung c�
     
     // Xử lý lỗi quota exceeded
     if (error.message?.includes('quota') || error.message?.includes('429') || error.message?.includes('RESOURCE_EXHAUSTED')) {
-      if (retryCount < 2) {
-        const delay = (retryCount + 1) * 3000; // 3s, 6s
-        console.warn(`Quota exceeded. Retrying in ${delay}ms... (attempt ${retryCount + 1}/2)`);
+      if (retryCount < 1) {
+        const delay = (retryCount + 1) * 60000; // 60s delay
+        console.warn(`Quota exceeded. Retrying in ${delay}ms... (attempt ${retryCount + 1}/1)`);
         await new Promise(resolve => setTimeout(resolve, delay));
         return callGemini(message, userType, config, history, onToken, retryCount + 1);
       } else {
-        // Trả về response mẫu thay vì lỗi
-        return generateDetailedResponse(message, userType);
+        console.warn('Quota exceeded, using enhanced fallback response');
+        // Trả về response intelligent fallback thay vì lỗi
+        const intelligentResponse = generateIntelligentFallback(message, userType);
+        if (onToken) {
+          // Simulate streaming cho fallback
+          const words = intelligentResponse.split(' ');
+          for (let i = 0; i < words.length; i++) {
+            const word = words[i] + (i < words.length - 1 ? ' ' : '');
+            onToken(word);
+            await new Promise(resolve => setTimeout(resolve, 50));
+          }
+        }
+        return intelligentResponse;
       }
     }
     
-    // Với các lỗi khác, trả về response mẫu
-    return generateDetailedResponse(message, userType);
+    // Với các lỗi khác, trả về response intelligent fallback
+    const intelligentResponse = generateIntelligentFallback(message, userType);
+    if (onToken) {
+      // Simulate streaming cho fallback
+      const words = intelligentResponse.split(' ');
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i] + (i < words.length - 1 ? ' ' : '');
+        onToken(word);
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+    }
+    return intelligentResponse;
   }
+};
+
+// Tạo intelligent fallback response dựa trên context
+const generateIntelligentFallback = (message: string, userType: string): string => {
+  const lowerMessage = message.toLowerCase();
+  
+  // Tư vấn credit officer
+  if (userType === 'credit-officer' && (lowerMessage.includes('tư vấn') || lowerMessage.includes('lưu ý'))) {
+    return `Chào bạn! 👋 Tôi là TV Bank AI Assistant. Khi tư vấn khách hàng, bạn nên lưu ý:
+
+**🎯 Nguyên tắc tư vấn chuyên nghiệp:**
+
+**1. Lắng nghe và hiểu nhu cầu:**
+• Để khách hàng trình bày đầy đủ tình hình tài chính
+• Đặt câu hỏi mở để hiểu rõ mục đích vay vốn
+• Ghi nhận thông tin về thu nhập, chi phí, tài sản hiện có
+
+**2. Phân tích khả năng tài chính:**
+• Tính toán tỷ lệ DSTI (không vượt 60%)
+• Đánh giá nguồn thu nhập ổn định
+• Xem xét tài sản đảm bảo (nếu có)
+
+**3. Tư vấn sản phẩm phù hợp:**
+• Giải thích rõ các gói vay: lãi suất, thời hạn, điều kiện
+• So sánh ưu nhược điểm của từng sản phẩm
+• Đề xuất phương án thanh toán hợp lý
+
+**4. Quy trình và giấy tờ:**
+• Hướng dẫn chuẩn bị hồ sơ đầy đủ
+• Giải thích các bước thẩm định
+• Cam kết thời gian xử lý
+
+**5. Rủi ro và lưu ý:**
+• Cảnh báo về rủi ro khi không trả được nợ
+• Tư vấn kế hoạch tài chính dài hạn
+• Đảm bảo khách hàng hiểu rõ nghĩa vụ
+
+Bạn có cần tôi tư vấn thêm về khía cạnh nào khác không? 😊`;
+  }
+  
+  // Fallback chung cho các câu hỏi khác
+  return generateDetailedResponse(message, userType);
 };
 
 // Export function cho streaming response
