@@ -59,7 +59,13 @@ const chatScenarios: ChatScenario[] = [
       '2. Mobile Banking: Sử dụng app TV Bank trên điện thoại',
       '3. SMS Banking: Soạn tin "SD [số tài khoản]" gửi 8168',
       '4. ATM: Sử dụng thẻ ATM tại bất kỳ cây ATM nào của TV Bank',
-      'Bạn cần hỗ trợ thêm về cách nào cụ thể không?'
+      'Bạn cần hỗ trợ thêm về cách nào cụ thể không?'',
+      'Ngoài ra, bạn có thể tham khảo các sản phẩm khác của TV Bank như:',
+      '- 🌟 **Tiết kiệm online** với lãi suất ưu đãi.',
+      '- 💳 **Thẻ tín dụng** với hoàn tiền và ưu đãi mua sắm.',
+      '- 🏠 **Vay mua nhà** với thủ tục nhanh gọn.',
+      '- 🚗 **Vay mua xe**, giải ngân chỉ trong 24 giờ.',
+      'Bạn muốn tìm hiểu thêm về sản phẩm nào? Mình sẽ hỗ trợ ngay!'
     ]
   },
   {
@@ -75,8 +81,13 @@ const chatScenarios: ChatScenario[] = [
   '🛒 **Vay hộ kinh doanh cá thể / tiểu thương**\n- Hỗ trợ vốn lưu động, mua hàng, mở rộng quy mô\n- Hạn mức: 30 - 500 triệu\n- Có thể yêu cầu tài sản đảm bảo hoặc bảo lãnh từ Quỹ tín dụng nhân dân',
   '🏡 **Vay tiêu dùng có tài sản đảm bảo**\n- Dành cho mục đích: sửa nhà, học phí, mua sắm, chữa bệnh...\n- Tài sản đảm bảo: sổ đỏ, xe ô tô, sổ tiết kiệm\n- Lãi suất hợp lý, linh hoạt thời hạn trả nợ',
   '📄 **Hồ sơ vay vốn cần chuẩn bị:**\n- CMND/CCCD + sổ hộ khẩu\n- Phương án vay vốn (kế hoạch sản xuất, nhu cầu cụ thể...)\n- Giấy tờ chứng minh thu nhập hoặc tài sản đảm bảo\n- Một số giấy tờ khác tùy theo từng gói vay',
-  '📌 Bạn đang cần vay để làm gì? (ví dụ: trồng trọt, chăn nuôi, kinh doanh, sửa nhà...) Mình sẽ tư vấn gói vay phù hợp nhất cho bạn.'
-    ]
+  '📌 Bạn đang cần vay để làm gì? (ví dụ: trồng trọt, chăn nuôi, kinh doanh, sửa nhà...) Mình sẽ tư vấn gói vay phù hợp nhất cho bạn.',
+  '💡 Ngoài ra, bạn có thể tham khảo thêm một số dịch vụ khác của TV Bank:',
+    '- 💳 **Mở thẻ tín dụng**: Miễn phí thường niên năm đầu, hoàn tiền hấp dẫn.',
+    '- 🧾 **Gửi tiết kiệm online**: Lãi suất cao hơn tại quầy, linh hoạt kỳ hạn.',
+    '- 📲 **Internet/Mobile Banking**: Chuyển khoản, thanh toán hóa đơn, nạp tiền nhanh chóng.',
+    '- 🔐 **Bảo hiểm tích hợp ngân hàng**: Bảo vệ tài chính và đầu tư dài hạn.',
+    'Nếu bạn quan tâm đến bất kỳ dịch vụ nào, hãy cho mình biết để được hỗ trợ thêm nhé!'
   },
   {
     id: 'savings-investment',
