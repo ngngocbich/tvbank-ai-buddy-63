@@ -161,7 +161,11 @@ const chatScenarios: ChatScenario[] = [
     userType: 'credit-officer',
     icon: <Users className="w-4 h-4" />,
     description: 'Kiểm tra lịch sử tín dụng và thông tin khách hàng',
-    initialMessage: 'Tôi cần tra cứu thông tin tín dụng của khách hàng mã KH123456.',
+    initialMessage: 'Tôi cần tra cứu thông tin tín dụng của khách hàng.',
+    responses: [ 
+      'Bạn cần tra cứu thông tin khách hàng có mã KH/CCCD/SĐT nào?'
+    ]
+    /* initialMessage: 'Tôi cần tra cứu thông tin tín dụng của khách hàng mã KH123456.',
     responses: [
       '🔍 **Thông tin khách hàng KH123456:**',
       '📊 **Điểm tín dụng CIC:** 750/900 (Tốt)\n**Phân loại nợ:** Nhóm 1 (Chuẩn)\n**Tổng dư nợ hiện tại:** 125 triệu VND',
@@ -169,7 +173,7 @@ const chatScenarios: ChatScenario[] = [
       '💰 **Tài chính hiện tại:**\n- Thu nhập: 35 triệu/tháng\n- Tỷ lệ DSTI: 45% (Trong ngưỡng an toàn)\n- Tài sản đảm bảo: Nhà tại Hà Nội trị giá 2.8 tỷ',
       '✅ **Đánh giá rủi ro:** THẤP - Khách hàng đủ điều kiện cho các gói vay ưu đãi.',
       'Bạn cần thêm thông tin gì khác về khách hàng này?'
-    ]
+    ] */
   },
   {
     id: 'risk-assessment',
