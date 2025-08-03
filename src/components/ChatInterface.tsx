@@ -160,69 +160,71 @@ const chatScenarios: ChatScenario[] = [
     title: 'Tra cứu thông tin khách hàng',
     userType: 'credit-officer',
     icon: <Users className="w-4 h-4" />,
-    description: 'Kiểm tra lịch sử tín dụng và thông tin khách hàng',
-    initialMessage: 'Tôi cần tra cứu thông tin tín dụng của khách hàng.',
-    responses: [ 
-      'Bạn cần tra cứu thông tin khách hàng có mã KH/CCCD/SĐT nào?'
-    ]
-    /* initialMessage: 'Tôi cần tra cứu thông tin tín dụng của khách hàng mã KH123456.',
+    description: 'Kiểm tra thông tin khách hàng từ database',
+    initialMessage: 'Tra cứu thông tin khách hàng có CCCD 123456789012.',
     responses: [
-      '🔍 **Thông tin khách hàng KH123456:**',
-      '📊 **Điểm tín dụng CIC:** 750/900 (Tốt)\n**Phân loại nợ:** Nhóm 1 (Chuẩn)\n**Tổng dư nợ hiện tại:** 125 triệu VND',
-      '📈 **Lịch sử vay:**\n- 2023: Vay tiêu dùng 80 triệu - Đã trả đúng hạn\n- 2022: Vay mua xe 200 triệu - Thanh toán tốt\n- Không có nợ xấu',
-      '💰 **Tài chính hiện tại:**\n- Thu nhập: 35 triệu/tháng\n- Tỷ lệ DSTI: 45% (Trong ngưỡng an toàn)\n- Tài sản đảm bảo: Nhà tại Hà Nội trị giá 2.8 tỷ',
-      '✅ **Đánh giá rủi ro:** THẤP - Khách hàng đủ điều kiện cho các gói vay ưu đãi.',
-      'Bạn cần thêm thông tin gì khác về khách hàng này?'
-    ] */
+      'Đang tra cứu thông tin khách hàng từ hệ thống...',
+      '🔍 **Thông tin khách hàng từ database:**',
+      '📋 **Thông tin cơ bản:**\n- Họ tên: Nguyễn Văn An\n- CCCD: 123456789012\n- SĐT: 0987654321\n- Thu nhập hàng tháng: 25,000,000 VNĐ',
+      '💰 **Tình hình tài chính:**\n- Số dư hiện tại: 15,500,000 VNĐ\n- Tổng nợ: 450,000,000 VNĐ\n- Điểm tín dụng: 720/900 (Tốt)\n- Nhóm nợ: 1 (Chuẩn)',
+      '📊 **Lịch sử vay vốn:**\n- Khoản vay hiện tại: 450 triệu VNĐ\n- Mục đích: Mua nhà\n- Thời hạn: 15 năm\n- Lãi suất: 8.5%/năm\n- Tình trạng: Đang trả đúng hạn',
+      '✅ **Đánh giá:** Khách hàng có uy tín tốt, đủ điều kiện cho các sản phẩm tín dụng.',
+      'Bạn muốn xem thêm thông tin gì về khách hàng này?'
+    ]
   },
   {
     id: 'risk-assessment',
-    title: 'Báo cáo rủi ro tín dụng',
+    title: 'Phân tích rủi ro khoản vay',
     userType: 'credit-officer',
     icon: <TrendingUp className="w-4 h-4" />,
-    description: 'Phân tích và đánh giá rủi ro cho hồ sơ vay',
-    initialMessage: 'Cần phân tích rủi ro cho hồ sơ vay 500 triệu của khách hàng KH789012.',
+    description: 'Đánh giá rủi ro dựa trên dữ liệu khách hàng và khoản vay',
+    initialMessage: 'Phân tích rủi ro cho khoản vay TV001234 của khách hàng.',
     responses: [
-      '⚠️ **Báo cáo đánh giá rủi ro - KH789012:**',
-      '🔴 **Các yếu tố rủi ro:**\n- Thu nhập không ổn định (freelancer)\n- DSTI cao 68% (vượt ngưỡng 60%)\n- Đã có 2 khoản vay đang tồn đọng',
-      '🟡 **Yếu tố tích cực:**\n- Có tài sản đảm bảo (căn hộ 1.2 tỷ)\n- Lịch sử giao dịch tại TV Bank 5 năm\n- Chưa có nợ quá hạn',
-      '📋 **Đề xuất:**\n1. Giảm hạn mức xuống 300 triệu\n2. Yêu cầu tài sản đảm bảo bổ sung\n3. Lãi suất áp dụng: 14%/năm (cao hơn 2% so với tiêu chuẩn)',
-      '📊 **Mức độ rủi ro:** TRUNG BÌNH - Cần theo dõi sát sao trong 12 tháng đầu.',
-      'Bạn có muốn xem thêm chi tiết về từng yếu tố rủi ro không?'
+      'Đang phân tích dữ liệu từ hệ thống...',
+      '⚠️ **Báo cáo đánh giá rủi ro - Khoản vay TV001234:**',
+      '📋 **Thông tin khoản vay:**\n- Số tiền: 800,000,000 VNĐ\n- Mục đích: Kinh doanh\n- Thời gian vay: 36 tháng\n- Lãi suất: 12%/năm\n- Tài sản đảm bảo: Nhà tại TP.HCM',
+      '🔴 **Yếu tố rủi ro:**\n- Khoản vay quá hạn: 15 ngày\n- Tỷ lệ nợ/thu nhập: 65% (cao)\n- Nhóm nợ: 2 (Cần chú ý)\n- Thu nhập giảm 20% so với năm trước',
+      '🟡 **Yếu tố tích cực:**\n- Tài sản đảm bảo trị giá 1.5 tỷ\n- Lịch sử giao dịch 8 năm tại TV Bank\n- Điểm tín dụng: 680/900 (Khá)\n- Có kế hoạch trả nợ rõ ràng',
+      '📊 **Đề xuất xử lý:**\n1. Gia hạn thời gian trả nợ 6 tháng\n2. Tăng lãi suất lên 13.5%/năm\n3. Yêu cầu báo cáo tài chính hàng quý\n4. Theo dõi sát tình hình kinh doanh',
+      '🎯 **Mức độ rủi ro:** TRUNG BÌNH - Cần theo dõi chặt chẽ.',
+      'Bạn có cần phân tích sâu hơn về khía cạnh nào không?'
     ]
   },
   {
     id: 'loan-approval',
-    title: 'Phê duyệt hồ sơ vay',
+    title: 'Xử lý hồ sơ vay mới',
     userType: 'credit-officer',
     icon: <CreditCard className="w-4 h-4" />,
-    description: 'Quy trình thẩm định và phê duyệt hồ sơ',
-    initialMessage: 'Cần hướng dẫn quy trình phê duyệt cho hồ sơ vay KH555888.',
+    description: 'Thẩm định và xử lý hồ sơ vay dựa trên dữ liệu thực',
+    initialMessage: 'Xử lý hồ sơ vay mới cho khách hàng CCCD 098765432109.',
     responses: [
-      '📋 **Quy trình phê duyệt hồ sơ vay - KH555888:**',
-      '✅ **Bước 1: Kiểm tra hồ sơ cơ bản**\n- Giấy tờ tùy thân: Hoàn chỉnh\n- Chứng minh thu nhập: Đã xác thực\n- Hồ sơ pháp lý tài sản: Hợp lệ',
-      '🔍 **Bước 2: Thẩm định tín dụng**\n- CIC Score: 780/900 (Tốt)\n- Lịch sử nợ: Sạch\n- Khả năng trả nợ: Đủ điều kiện',
-      '🏠 **Bước 3: Thẩm định tài sản**\n- Định giá tài sản: 3.2 tỷ\n- Tỷ lệ cho vay: 70% (2.24 tỷ)\n- Pháp lý: Không vướng mắc',
-      '📊 **Kết luận thẩm định:**\n- Đề xuất phê duyệt: 2.0 tỷ VND\n- Lãi suất: 9.5%/năm\n- Thời hạn: 15 năm\n- Điều kiện đặc biệt: Không',
-      '⏰ **Tiến độ:** Chờ phê duyệt cấp trên - Dự kiến hoàn thành trong 2 ngày làm việc.',
-      'Bạn cần bổ sung thông tin gì khác cho hồ sơ này không?'
+      'Đang kiểm tra thông tin khách hàng từ database...',
+      '📋 **Thông tin hồ sơ vay mới:**',
+      '👤 **Thông tin khách hàng:**\n- Họ tên: Trần Thị Bình\n- CCCD: 098765432109\n- SĐT: 0912345678\n- Thu nhập: 18,000,000 VNĐ/tháng\n- Điểm tín dụng: 750/900',
+      '💰 **Chi tiết khoản vay:**\n- Số tiền đề nghị: 300,000,000 VNĐ\n- Mục đích: Mở rộng kinh doanh\n- Thời hạn: 5 năm\n- Tài sản đảm bảo: Sổ đỏ nhà riêng',
+      '🔍 **Kết quả thẩm định:**\n- Tỷ lệ nợ/thu nhập: 42% (Trong ngưỡng an toàn)\n- Lịch sử tín dụng: Sạch\n- Định giá tài sản đảm bảo: 850,000,000 VNĐ\n- Tỷ lệ cho vay/tài sản: 35% (An toàn)',
+      '✅ **Quyết định phê duyệt:**\n- Số tiền cho vay: 300,000,000 VNĐ\n- Lãi suất áp dụng: 10.5%/năm\n- Thời hạn: 60 tháng\n- Kỳ thanh toán: Hàng tháng',
+      '📋 **Các bước tiếp theo:**\n1. Hoàn thiện hồ sơ pháp lý\n2. Ký hợp đồng tín dụng\n3. Thực hiện giải ngân\n4. Thiết lập lịch trả nợ',
+      'Khoản vay đã được phê duyệt. Bạn có cần hỗ trợ thêm gì không?'
     ]
   },
   {
     id: 'debt-restructuring',
-    title: 'Tái cấu trúc nợ',
+    title: 'Tái cấu trúc nợ khách hàng',
     userType: 'credit-officer',
     icon: <TrendingUp className="w-4 h-4" />,
-    description: 'Hỗ trợ khách hàng tái cấu trúc khoản vay',
-    initialMessage: 'Khách hàng KH444777 gặp khó khăn, cần tư vấn tái cấu trúc nợ.',
+    description: 'Xử lý tái cấu trúc nợ dựa trên dữ liệu thực',
+    initialMessage: 'Khách hàng có khoản vay TV005678 gặp khó khăn thanh toán.',
     responses: [
-      '🔄 **Phương án tái cấu trúc nợ - KH444777:**',
-      '💳 **Tình trạng hiện tại:**\n- Dư nợ gốc: 850 triệu VND\n- Quá hạn: 45 ngày\n- Lý do: Giảm thu nhập do Covid-19',
-      '📋 **Đề xuất phương án:**\n**Phương án 1:** Gia hạn nợ gốc 12 tháng\n**Phương án 2:** Giảm lãi suất xuống 8%/năm\n**Phương án 3:** Kết hợp cả hai',
-      '💰 **Phương án được chọn - Kết hợp:**\n- Gia hạn nợ gốc: 12 tháng\n- Lãi suất mới: 8%/năm (giảm 1.5%)\n- Phí gia hạn: Miễn\n- Thời hạn còn lại: 8 năm',
-      '📊 **Khoản thanh toán mới:**\n- Trước: 12.5 triệu/tháng\n- Sau: 8.2 triệu/tháng\n- Tiết kiệm: 4.3 triệu/tháng',
-      '✅ **Điều kiện áp dụng:**\n- Cam kết không phát sinh nợ mới\n- Báo cáo tình hình tài chính 3 tháng/lần\n- Đưa tài khoản lương về TV Bank',
-      'Phương án này có phù hợp với khách hàng không?'
+      'Đang tra cứu thông tin khoản vay từ database...',
+      '🔄 **Tình trạng khoản vay TV005678:**',
+      '💳 **Thông tin hiện tại:**\n- Khách hàng: Lê Văn Cường\n- CCCD: 456789012345\n- Dư nợ gốc: 650,000,000 VNĐ\n- Quá hạn: 60 ngày\n- Nguyên nhân: Mất việc làm',
+      '📊 **Tình hình tài chính:**\n- Thu nhập cũ: 22,000,000 VNĐ/tháng\n- Thu nhập hiện tại: 8,000,000 VNĐ/tháng\n- Khoản trả hàng tháng: 15,500,000 VNĐ\n- Tài sản đảm bảo: Nhà riêng 1.2 tỷ',
+      '📋 **Đề xuất phương án tái cấu trúc:**\n**Phương án 1:** Gia hạn 18 tháng, giữ nguyên lãi suất\n**Phương án 2:** Giảm lãi suất từ 11% xuống 8.5%\n**Phương án 3:** Kết hợp gia hạn + giảm lãi suất',
+      '✅ **Phương án được chọn - Kết hợp:**\n- Gia hạn thêm: 18 tháng\n- Lãi suất mới: 8.5%/năm (giảm 2.5%)\n- Phí tái cấu trúc: Miễn phí\n- Thời hạn mới: 7.5 năm',
+      '💰 **Khoản thanh toán sau tái cấu trúc:**\n- Trước: 15,500,000 VNĐ/tháng\n- Sau: 9,200,000 VNĐ/tháng\n- Giảm: 6,300,000 VNĐ/tháng (40%)',
+      '📝 **Điều kiện cam kết:**\n- Không phát sinh nợ mới trong 2 năm\n- Báo cáo tình hình tài chính 6 tháng/lần\n- Chuyển lương về tài khoản TV Bank',
+      'Phương án tái cấu trúc đã được phê duyệt. Bạn cần hỗ trợ thêm gì không?'
     ]
   },
   {
