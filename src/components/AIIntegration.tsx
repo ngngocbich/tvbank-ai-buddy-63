@@ -61,6 +61,7 @@ DỊCH VỤ TV BANK:
 Trả lời ngắn gọn, thân thiện và có emoji phù hợp.`,
     temperature: 0.7,
     maxTokens: 1000
+>>>>>>> 9aa9cc434dc8bf3ad705ab4f580006670b77f985
   }
 };
 
@@ -125,22 +126,24 @@ export default function AIIntegration() {
             contents: [{
               role: 'user',
               parts: [{ text: 'Hello, test connection' }] 
-            }],
+            }], */
+            contents: [{ 
+              parts: [{ text: 'Test connection' }] 
+            }]
+            /*
             generationConfig: {
               temperature: 0.1,
               maxOutputTokens: 50
-            }
+            } */
           })
         });
         
         if (!response.ok) {
-          const errorText = await response.text();
-          console.error('Gemini API Error:', response.status, errorText);
           throw new Error(`Gemini API connection failed: ${response.status}`);
         }
-        
+        /*
         const data = await response.json();
-        console.log('Gemini test response:', data);
+        console.log('Gemini test response:', data); */
       }
 
       setConnectionStatus(prev => ({ ...prev, [provider]: 'connected' }));
@@ -362,6 +365,7 @@ const callOpenAI = async (message: string, userType: string, config: AIConfig,hi
 };
 
 // Gọi Gemini API với format đúng và retry logic
+/*
 const callGemini = async (
   message: string,
   userType: string,
@@ -493,6 +497,32 @@ const callGemini = async (
     // Throw the original error để hiển thị fallback response trong UI
     throw error;
   }
+}; 
+*/
+
+const callGemini = async (message: string, userType: string, config: AIConfig) => {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{
+          text: `${config.systemPrompt}\n\nNgười dùng: [${userType}] ${message}`
+        }]
+      }],
+      generationConfig: {
+        temperature: config.temperature,
+        maxOutputTokens: config.maxTokens
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error('Gemini API failed');
+  }
+
+  const data = await response.json();
+  return data.candidates[0].content.parts[0].text;
 };
 
 // Fallback response khi API không khả dụng
