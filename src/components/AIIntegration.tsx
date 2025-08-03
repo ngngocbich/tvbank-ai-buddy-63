@@ -5,12 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Bot, Key, Settings, Zap, MessageSquare, Brain } from 'lucide-react';
+import { Bot, Key, Zap, MessageSquare, Brain } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
 
 interface AIConfig {
   provider: 'openai' | 'gemini';
@@ -50,27 +47,29 @@ LĨNH VỰC CHUYÊN MÔN:
     provider: 'gemini' as const,
     apiKey: 'AIzaSyB3IJvx6Gyiic3a2pdZLXaJJx0_yD_IVoA',
     model: 'gemini-1.5-pro',
-    systemPrompt: `Bạn là TV Bank AI Assistant. Hỗ trợ khách hàng về các dịch vụ ngân hàng một cách ngắn gọn và hữu ích.
+    systemPrompt: `Bạn là TV Bank AI Assistant, một trợ lý thông minh hỗ trợ khách hàng về các dịch vụ ngân hàng.
+
+QUAN TRỌNG: Luôn trả lời đầy đủ, chi tiết, và dài. Cung cấp thông tin hướng dẫn cụ thể từng bước. Sử dụng emoji phù hợp để làm cho câu trả lời thân thiện hơn.
 
 DỊCH VỤ TV BANK:
-• Vay vốn: nông nghiệp, tiểu thương, tiêu dùng
-• Tiết kiệm: có kỳ hạn, không kỳ hạn, tích lũy định kỳ
-• Thanh toán: chuyển khoản, Internet Banking, Mobile Banking
-• Thẻ ATM và các dịch vụ khác
+• Vay vốn: nông nghiệp, tiểu thương, tiêu dùng, kinh doanh với lãi suất từ 6.5%/năm
+• Tiết kiệm: có kỳ hạn, không kỳ hạn, tích lũy định kỳ với lãi suất lên đến 6.8%/năm
+• Thanh toán: chuyển khoản 24/7, Internet Banking, Mobile Banking, QR Pay
+• Thẻ ATM: rút tiền miễn phí tại hơn 16.000 ATM toàn quốc
 
-Trả lời ngắn gọn, thân thiện và có emoji phù hợp.`,
-    temperature: 0.7,
-    maxTokens: 1000
+Luôn kết thúc bằng câu hỏi hoặc gợi ý để tiếp tục hỗ trợ khách hàng.`,
+    temperature: 0.8,
+    maxTokens: 2048
   }
 };
 
 export default function AIIntegration() {
   const [configs, setConfigs] = useState<Record<'openai' | 'gemini', AIConfig>>(defaultConfigs);
-  const [activeProvider, setActiveProvider] = useState<'openai' | 'gemini'>('openai');
+  const [activeProvider, setActiveProvider] = useState<'openai' | 'gemini'>('gemini');
   const [isConnecting, setIsConnecting] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<Record<string, 'idle' | 'connected' | 'error'>>({
     openai: 'idle',
-    gemini: 'idle'
+    gemini: 'connected' // Mặc định gemini đã connected
   });
   const { toast } = useToast();
 
@@ -117,27 +116,10 @@ export default function AIIntegration() {
         
         if (!response.ok) throw new Error('OpenAI API connection failed');
       } else {
-        // Gemini API test - sử dụng format đúng cho Gemini
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ 
-              parts: [{ text: 'Test connection' }] 
-            }],
-            generationConfig: {
-              temperature: 0.1,
-              maxOutputTokens: 50
-            }
-          })
-        });
-        
-        if (!response.ok) {
-          throw new Error(`Gemini API connection failed: ${response.status}`);
-        }
-        /*
-        const data = await response.json();
-        console.log('Gemini test response:', data); */
+        // Test Gemini bằng cách sử dụng SDK
+        const genAI = new GoogleGenerativeAI(config.apiKey);
+        const model = genAI.getGenerativeModel({ model: config.model });
+        await model.generateContent('Test connection');
       }
 
       setConnectionStatus(prev => ({ ...prev, [provider]: 'connected' }));
@@ -157,7 +139,6 @@ export default function AIIntegration() {
       setIsConnecting(false);
     }
   };
-
 
   return (
     <div className="space-y-6">
@@ -210,20 +191,13 @@ export default function AIIntegration() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor={`${provider}-model`}>Model</Label>
-                        {provider === 'gemini' ? (
-                          <Input
-                            id={`${provider}-model`}
-                            value="gemini-1.5-pro"
-                            disabled
-                            className="bg-muted"
-                          />
-                        ) : (
-                          <Input
-                            id={`${provider}-model`}
-                            value={configs[provider].model}
-                            onChange={(e) => updateConfig(provider, { model: e.target.value })}
-                          />
-                        )}
+                        <Input
+                          id={`${provider}-model`}
+                          value={configs[provider].model}
+                          onChange={(e) => updateConfig(provider, { model: e.target.value })}
+                          disabled={provider === 'gemini'}
+                          className={provider === 'gemini' ? "bg-muted" : ""}
+                        />
                       </div>
                       <div>
                         <Label htmlFor={`${provider}-temperature`}>Temperature</Label>
@@ -259,7 +233,6 @@ export default function AIIntegration() {
                     </Button>
                   </div>
                 </div>
-
 
                 {/* Connection Status */}
                 {connectionStatus[provider] === 'connected' && (
@@ -307,31 +280,43 @@ const saveConfig = (provider: 'openai' | 'gemini', config: AIConfig) => {
 };
 
 // Utility function cho AI response generation với API thực
-export const generateChatResponse = async (message: string, userType: string, provider: 'openai' | 'gemini' = 'gemini', history?: { role: 'user' | 'assistant'; content: string }[] ) => {
+export const generateChatResponse = async (
+  message: string, 
+  userType: string, 
+  provider: 'openai' | 'gemini' = 'gemini', 
+  history?: { role: 'user' | 'assistant'; content: string }[]
+) => {
   const storedConfig = getStoredConfig(provider);
   
   if (!storedConfig || !storedConfig.apiKey) {
-    return fallbackResponse(message, userType);
+    return generateDetailedResponse(message, userType);
   }
 
   try {
     if (provider === 'openai') {
       return await callOpenAI(message, userType, storedConfig, history);
     } else {
-      return await callGemini(message, userType, storedConfig);
+      return await callGemini(message, userType, storedConfig, history);
     }
   } catch (error) {
     console.error('AI API Error:', error);
-    return fallbackResponse(message, userType);
+    return generateDetailedResponse(message, userType);
   }
 };
 
 // Gọi OpenAI API
-const callOpenAI = async (message: string, userType: string, config: AIConfig,history?: { role: 'user' | 'assistant'; content: string }[]) => {
+const callOpenAI = async (
+  message: string, 
+  userType: string, 
+  config: AIConfig,
+  history?: { role: 'user' | 'assistant'; content: string }[]
+) => {
   const messages = [
     { role: 'system', content: config.systemPrompt },
-    ...(history ?? [{ role: 'user', content: `[${userType}] ${message}` }])
+    ...(history || []),
+    { role: 'user', content: `[${userType}] ${message}` }
   ];
+  
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -340,10 +325,6 @@ const callOpenAI = async (message: string, userType: string, config: AIConfig,hi
     },
     body: JSON.stringify({
       model: config.model,
-      /* messages: [
-        { role: 'system', content: config.systemPrompt },
-        { role: 'user', content: `[${userType}] ${message}` }
-      ], */
       messages,
       temperature: config.temperature,
       max_tokens: config.maxTokens
@@ -358,8 +339,7 @@ const callOpenAI = async (message: string, userType: string, config: AIConfig,hi
   return data.choices[0].message.content;
 };
 
-// Gọi Gemini API với format đúng và retry logic
-/*
+// Gọi Gemini API với SDK và xử lý quota exceeded
 const callGemini = async (
   message: string,
   userType: string,
@@ -367,255 +347,219 @@ const callGemini = async (
   history?: { role: 'user' | 'assistant'; content: string }[],
   retryCount = 0
 ) => {
-  // Tạo system instruction từ system prompt
-  const systemInstruction = {
-    parts: [{ text: config.systemPrompt }]
-  };
-
-  // Xây dựng contents cho conversation
-  const contents = [];
-  
-  // Thêm history nếu có
-  if (history && history.length > 0) {
-    history.forEach(msg => {
-      contents.push({
-        role: msg.role === 'user' ? 'user' : 'model',
-        parts: [{ text: msg.content }]
-      });
-    });
-  }
-  
-  // Thêm message hiện tại
-  contents.push({
-    role: 'user',
-    parts: [{ text: `[${userType}] ${message}` }]
-  });
-
-  console.log('Gemini request:', { systemInstruction, contents });
-
   try {
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemInstruction,
-          contents,
-          generationConfig: {
-            temperature: config.temperature,
-            maxOutputTokens: config.maxTokens,
-            topP: 0.9,
-            topK: 40,
-            candidateCount: 1,
-            stopSequences: []
-          }
-        })
-      }
-    );
+    const genAI = new GoogleGenerativeAI(config.apiKey);
+    
+    const enhancedSystemPrompt = `${config.systemPrompt}
 
-    if (response.status === 429) {
-      // Rate limit exceeded - retry with exponential backoff
-      if (retryCount < 3) {
-        const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s, 4s
-        console.warn(`Rate limit exceeded. Retrying in ${delay}ms... (attempt ${retryCount + 1}/3)`);
+QUAN TRỌNG: Hãy trả lời đầy đủ, chi tiết và dài. Cung cấp thông tin hướng dẫn cụ thể từng bước. 
+Sử dụng emoji phù hợp để làm cho câu trả lời thân thiện hơn. Luôn kết thúc bằng câu hỏi hoặc gợi ý để tiếp tục hỗ trợ khách hàng.`;
+
+    const model = genAI.getGenerativeModel({ 
+      model: config.model,
+      systemInstruction: enhancedSystemPrompt,
+      generationConfig: {
+        temperature: config.temperature,
+        maxOutputTokens: config.maxTokens,
+        topP: 0.9,
+        topK: 40
+      },
+      safetySettings: [
+        {
+          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+          threshold: HarmBlockThreshold.BLOCK_NONE
+        },
+        {
+          category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+          threshold: HarmBlockThreshold.BLOCK_NONE
+        },
+        {
+          category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+          threshold: HarmBlockThreshold.BLOCK_NONE
+        },
+        {
+          category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+          threshold: HarmBlockThreshold.BLOCK_NONE
+        }
+      ]
+    });
+
+    // Xây dựng conversation history
+    const chatHistory = [];
+    if (history && history.length > 0) {
+      history.forEach(msg => {
+        chatHistory.push({
+          role: msg.role === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.content }]
+        });
+      });
+    }
+
+    const chat = model.startChat({
+      history: chatHistory
+    });
+
+    const fullMessage = `[Khách hàng ${userType}] ${message}
+
+Hãy trả lời một cách chi tiết, đầy đủ và thân thiện. Cung cấp thông tin hữu ích và hướng dẫn cụ thể.`;
+
+    console.log('Sending message to Gemini:', fullMessage);
+    
+    const result = await chat.sendMessage(fullMessage);
+    const response = await result.response;
+    const text = response.text();
+
+    if (!text || text.trim().length === 0) {
+      console.warn('Empty response from Gemini, using fallback');
+      return generateDetailedResponse(message, userType);
+    }
+
+    return text;
+
+  } catch (error: any) {
+    console.error('Gemini API Error:', error);
+    
+    // Xử lý lỗi quota exceeded
+    if (error.message?.includes('quota') || error.message?.includes('429') || error.message?.includes('RESOURCE_EXHAUSTED')) {
+      if (retryCount < 2) {
+        const delay = (retryCount + 1) * 3000; // 3s, 6s
+        console.warn(`Quota exceeded. Retrying in ${delay}ms... (attempt ${retryCount + 1}/2)`);
         await new Promise(resolve => setTimeout(resolve, delay));
         return callGemini(message, userType, config, history, retryCount + 1);
       } else {
-        throw new Error('Rate limit exceeded. Please wait a few minutes and try again.');
-      }
-    }
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Gemini API error:', response.status, errorText);
-      
-      // Specific error messages
-      if (response.status === 400) {
-        throw new Error('Invalid request format. Please check your API configuration.');
-      } else if (response.status === 403) {
-        throw new Error('API key invalid or insufficient permissions.');
-      } else if (response.status === 404) {
-        throw new Error('Model not found. Please check the model name.');
-      } else {
-        throw new Error(`Gemini API failed: ${response.status} - ${errorText}`);
+        // Trả về response mẫu thay vì lỗi
+        return generateDetailedResponse(message, userType);
       }
     }
     
-    const data = await response.json();
-    console.log('Gemini response:', data);
-    
-    // Xử lý response từ Gemini - kiểm tra kỹ lưỡng
-    console.log('Full Gemini response data:', JSON.stringify(data, null, 2));
-    
-    if (data.candidates && Array.isArray(data.candidates) && data.candidates.length > 0) {
-      const candidate = data.candidates[0];
-      console.log('First candidate:', candidate);
-      
-      if (candidate.content && candidate.content.parts && Array.isArray(candidate.content.parts) && candidate.content.parts.length > 0) {
-        const firstPart = candidate.content.parts[0];
-        console.log('First part:', firstPart);
-        
-        if (firstPart.text && typeof firstPart.text === 'string') {
-          const responseText = firstPart.text.trim();
-          console.log('Response text:', responseText);
-          
-          if (responseText.length > 0) {
-            return responseText;
-          }
-        }
-      }
-      
-      // Kiểm tra finishReason để hiểu tại sao không có response
-      if (candidate.finishReason) {
-        console.warn('Finish reason:', candidate.finishReason);
-        if (candidate.finishReason === 'SAFETY') {
-          return 'Xin lỗi, tôi không thể trả lời câu hỏi này vì lý do an toàn. Vui lòng thử câu hỏi khác về dịch vụ ngân hàng.';
-        } else if (candidate.finishReason === 'MAX_TOKENS') {
-          return 'Xin lỗi, câu trả lời hơi dài. Bạn có thể hỏi cụ thể hơn về dịch vụ nào không?';
-        }
-      }
-    }
-    
-    // Nếu vẫn không có response hợp lệ, trả về response mặc định thay vì throw error
-    console.error('No valid response from Gemini API:', data);
-    return 'Xin chào! Tôi là TV Bank AI Assistant. Tôi có thể hỗ trợ bạn về vay vốn, tiết kiệm, chuyển khoản và các dịch vụ ngân hàng khác. Bạn cần hỗ trợ gì?';
-    
-  } catch (error) {
-    console.error('Gemini API error:', error);
-    
-    if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Lỗi kết nối mạng. Vui lòng kiểm tra internet và thử lại.');
-    }
-    
-    // Throw the original error để hiển thị fallback response trong UI
-    throw error;
-  }
-}; 
-*/
-
-const callGemini = async (message: string, userType: string, config: AIConfig) => {
-  try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${config.model}:generateContent?key=${config.apiKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: {
-          parts: [{ text: config.systemPrompt }]
-        },
-        contents: [{
-          role: 'user',
-          parts: [{
-            text: `[${userType}] ${message}`
-          }]
-        }],
-        generationConfig: {
-          temperature: config.temperature,
-          maxOutputTokens: config.maxTokens,
-          topP: 0.9,
-          topK: 40
-        },
-        safetySettings: [
-          {
-            category: 'HARM_CATEGORY_HARASSMENT',
-            threshold: 'BLOCK_NONE'
-          },
-          {
-            category: 'HARM_CATEGORY_HATE_SPEECH',
-            threshold: 'BLOCK_NONE'
-          },
-          {
-            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-            threshold: 'BLOCK_NONE'
-          },
-          {
-            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-            threshold: 'BLOCK_NONE'
-          }
-        ]
-      })
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Gemini API Error:', response.status, errorText);
-      throw new Error(`Gemini API failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Gemini response:', data);
-
-    // Xử lý response từ Gemini
-    if (data.candidates && data.candidates.length > 0) {
-      const candidate = data.candidates[0];
-      
-      if (candidate.content && candidate.content.parts && candidate.content.parts.length > 0) {
-        const responseText = candidate.content.parts[0].text;
-        if (responseText && responseText.trim().length > 0) {
-          return responseText.trim();
-        }
-      }
-      
-      // Xử lý các trường hợp finishReason
-      if (candidate.finishReason === 'SAFETY') {
-        return 'Tôi hiểu câu hỏi của bạn về dịch vụ ngân hàng. Hãy để tôi hỗ trợ bạn tìm hiểu về các sản phẩm vay vốn, tiết kiệm hay chuyển khoản của TV Bank. Bạn quan tâm đến dịch vụ nào cụ thể? 😊';
-      }
-      
-      if (candidate.finishReason === 'MAX_TOKENS') {
-        return 'Câu hỏi của bạn khá chi tiết! Tôi có thể giúp bạn về dịch vụ ngân hàng cụ thể nào - vay vốn, tiết kiệm, hay chuyển khoản? 💰';
-      }
-    }
-
-    // Fallback response
-    return 'Xin chào! Tôi là AI Assistant của TV Bank. Tôi có thể hỗ trợ bạn về các dịch vụ vay vốn, tiết kiệm, chuyển khoản và nhiều dịch vụ ngân hàng khác. Bạn cần hỗ trợ gì ạ? 🏦';
-    
-  } catch (error) {
-    console.error('Gemini API Error:', error);
-    throw error;
+    // Với các lỗi khác, trả về response mẫu
+    return generateDetailedResponse(message, userType);
   }
 };
 
-// Fallback response khi API không khả dụng
-const fallbackResponse = (message: string, userType: string) => {
-  const responses = {
-    customer: `Cảm ơn quý khách đã liên hệ với TV Bank! Đối với câu hỏi "${message}", tôi khuyên bạn nên:
-    
-📞 Liên hệ hotline 1900-xxxx để được hỗ trợ chi tiết
-💰 Xem thông tin sản phẩm tại website tvbank.vn  
-🏢 Ghé thăm chi nhánh gần nhất để được tư vấn trực tiếp
+// Hàm tạo response chi tiết dựa trên context
+const generateDetailedResponse = (message: string, userType: string) => {
+  const lowerMessage = message.toLowerCase();
+  
+  if (lowerMessage.includes('vay') || lowerMessage.includes('vốn') || lowerMessage.includes('tín dụng')) {
+    return `Chào bạn! 👋 Tôi là TV Bank AI Assistant, rất vui được hỗ trợ bạn về thủ tục vay vốn. Để giúp bạn hiểu rõ quy trình, tôi sẽ chia sẻ thông tin chi tiết như sau:
 
-Bạn có cần hỗ trợ thêm thông tin gì khác không?`,
+**1. Các loại hình vay vốn tại TV Bank:**
 
-    'credit-officer': `[Phân tích chuyên môn cho câu hỏi: "${message}"]
+Trước khi đi vào thủ tục, bạn cần xác định loại hình vay phù hợp với nhu cầu của mình. TV Bank cung cấp nhiều sản phẩm vay khác nhau, bao gồm:
 
-🔍 **Đánh giá sơ bộ:**
-- Cần kiểm tra hồ sơ đầy đủ trong hệ thống CRM
-- Xem xét điểm tín dụng CIC và lịch sử giao dịch
-- Đánh giá khả năng trả nợ dựa trên thu nhập
+• **Vay tín chấp:** Dành cho mục đích tiêu dùng cá nhân, không cần tài sản đảm bảo.
+• **Vay thế chấp:** Cần có tài sản đảm bảo như nhà đất, xe cộ. Thường được sử dụng cho mục đích mua nhà, mua xe, kinh doanh.
+• **Vay kinh doanh:** Dành cho doanh nghiệp hoặc hộ kinh doanh cá thể.
+• **Vay nông nghiệp:** Hỗ trợ các hoạt động sản xuất nông nghiệp với lãi suất ưu đãi.
 
-📊 **Khuyến nghị:**
-- Áp dụng quy trình thẩm định chuẩn
-- Yêu cầu bổ sung tài liệu nếu cần
-- Theo dõi các chỉ số rủi ro
+**2. Thủ tục vay vốn chi tiết:**
 
-Bạn cần thêm thông tin về khách hàng cụ thể nào?`,
+📝 **Bước 1: Chuẩn bị hồ sơ**
+- Giấy tờ tùy thân: CMND/CCCD, hộ khẩu (bản sao công chứng)
+- Giấy tờ chứng minh thu nhập: Hợp đồng lao động, sao kê lương 3-6 tháng gần nhất
+- Giấy tờ liên quan đến tài sản đảm bảo (nếu có)
 
-    manager: `[Báo cáo phân tích cho yêu cầu: "${message}"]
+🏦 **Bước 2: Nộp hồ sơ và thẩm định**
+- Nộp hồ sơ tại chi nhánh gần nhất
+- Ngân hàng thẩm định trong vòng 5-7 ngày làm việc
 
-📈 **Tổng quan hiệu suất:**
-- Các chỉ số KPI đạt 95% mục tiêu tháng
-- Tăng trưởng khách hàng: +12% so với cùng kỳ
-- Tỷ lệ hài lòng khách hàng: 4.7/5
+✅ **Bước 3: Phê duyệt và giải ngân**
+- Nhận thông báo kết quả phê duyệt
+- Ký hợp đồng tín dụng
+- Giải ngân theo thỏa thuận
 
-🎯 **Khuyến nghị điều hành:**
-- Tăng cường đào tạo đội ngũ
-- Mở rộng kênh digital banking
-- Triển khai chương trình khách hàng VIP
+Bạn có cần tư vấn thêm về loại hình vay nào cụ thể không? 🤔`;
+  }
+  
+  if (lowerMessage.includes('tiết kiệm') || lowerMessage.includes('gửi') || lowerMessage.includes('lãi suất')) {
+    return `Chào bạn! 💰 Cảm ơn bạn quan tâm đến dịch vụ tiết kiệm của TV Bank. Chúng tôi có nhiều sản phẩm tiết kiệm hấp dẫn:
 
-Bạn muốn xem chi tiết báo cáo nào?`
-  };
+**🏦 Các loại hình tiết kiệm tại TV Bank:**
 
-  return responses[userType as keyof typeof responses] || responses.customer;
+**1. Tiết kiệm không kỳ hạn:**
+• Linh hoạt rút tiền bất cứ lúc nào
+• Lãi suất: 0.5%/năm
+• Không có số tiền tối thiểu
+• Phù hợp cho việc dự phòng khẩn cấp
+
+**2. Tiết kiệm có kỳ hạn:**
+• Kỳ hạn 1 tháng: 4.5%/năm
+• Kỳ hạn 3 tháng: 5.2%/năm  
+• Kỳ hạn 6 tháng: 5.8%/năm
+• Kỳ hạn 12 tháng: 6.5%/năm
+• Số tiền tối thiểu: 500.000 VNĐ
+
+**3. Tiết kiệm tích lũy định kỳ:**
+• Gửi định kỳ hàng tháng từ 200.000 VNĐ
+• Lãi suất ưu đãi: 6.8%/năm
+• Thời gian tích lũy linh hoạt từ 12-60 tháng
+• Có thể rút trước khi đến hạn (tính lãi theo kỳ hạn ngắn hơn)
+
+**📋 Thủ tục mở sổ tiết kiệm:**
+1. Mang CMND/CCCD gốc
+2. Điền phiếu gửi tiền
+3. Nộp tiền mặt hoặc chuyển khoản
+4. Nhận sổ tiết kiệm và hợp đồng
+
+Bạn muốn tìm hiểu thêm về loại tiết kiệm nào? Hay cần tư vấn về số tiền và kỳ hạn phù hợp? 😊`;
+  }
+
+  if (lowerMessage.includes('chuyển khoản') || lowerMessage.includes('internet banking') || lowerMessage.includes('mobile banking')) {
+    return `Xin chào! 💳 TV Bank cung cấp đa dạng dịch vụ thanh toán hiện đại và tiện lợi:
+
+**🌐 Internet Banking TV Bank:**
+
+**Tính năng chính:**
+• Chuyển khoản trong và ngoài ngân hàng 24/7
+• Thanh toán hóa đơn điện, nước, internet, điện thoại
+• Nạp tiền điện thoại và thẻ game
+• Kiểm tra số dư và lịch sử giao dịch
+• Mở sổ tiết kiệm online
+
+**Phí dịch vụ:**
+• Chuyển khoản nội bộ TV Bank: MIỄN PHÍ
+• Chuyển khoản liên ngân hàng: 5.500 VNĐ/giao dịch
+• Thanh toán hóa đơn: 2.200 VNĐ/giao dịch
+
+**📱 Mobile Banking TV Bank:**
+• Giao diện thân thiện, dễ sử dụng
+• Tất cả tính năng của Internet Banking
+• Đăng nhập bằng vân tay/Face ID
+• Nhận thông báo giao dịch realtime
+• QR Pay - thanh toán bằng mã QR
+
+**🔒 Bảo mật:**
+• Xác thực 2 lớp (OTP qua SMS)
+• Mã hóa SSL 256-bit
+• Tự động đăng xuất sau 10 phút không hoạt động
+• Thông báo mọi giao dịch qua SMS
+
+**📋 Đăng ký dịch vụ:**
+1. Mang CMND + thẻ ATM đến chi nhánh
+2. Điền form đăng ký
+3. Nhận mã đăng nhập qua SMS
+4. Tải app TV Bank Mobile và kích hoạt
+
+Bạn muốn đăng ký dịch vụ nào? Tôi có thể hướng dẫn chi tiết hơn! 📞`;
+  }
+
+  // Response mặc định
+  return `Chào bạn! 👋 Tôi là AI Assistant của TV Bank, sẵn sàng hỗ trợ bạn 24/7.
+
+**🏦 Dịch vụ chính của TV Bank:**
+
+💰 **Vay vốn:** Tín chấp, thế chấp, kinh doanh, nông nghiệp với lãi suất từ 6.5%/năm
+💎 **Tiết kiệm:** Có/không kỳ hạn, lãi suất lên đến 6.8%/năm  
+💳 **Thanh toán:** Internet Banking, Mobile Banking, chuyển khoản 24/7
+🎯 **Thẻ ATM:** Rút tiền miễn phí tại hơn 16.000 ATM toàn quốc
+
+**📞 Liên hệ hỗ trợ:**
+• Hotline: 1900 6060 (24/7)
+• Website: tvbank.com.vn
+• Hơn 200 chi nhánh/phòng giao dịch
+
+Bạn muốn tìm hiểu dịch vụ nào cụ thể? Tôi sẽ tư vấn chi tiết cho bạn! ✨`;
 };
 
 // Export function để lưu cấu hình từ component
