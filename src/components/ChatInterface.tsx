@@ -367,9 +367,18 @@ export default function ChatInterface() {
 
   // Kiểm tra API key khi component mount
   useEffect(() => {
-    const geminiKey = localStorage.getItem('tvbank-gemini-api-key');
-    const openaiKey = localStorage.getItem('tvbank-openai-api-key');
-    setHasAPIKey(!!(geminiKey || openaiKey));
+    const checkAPIKey = () => {
+      const geminiKey = localStorage.getItem('tvbank-gemini-api-key');
+      const openaiKey = localStorage.getItem('tvbank-openai-api-key');
+      console.log('Checking API keys:', { geminiKey: !!geminiKey, openaiKey: !!openaiKey });
+      setHasAPIKey(!!(geminiKey || openaiKey));
+    };
+    
+    checkAPIKey();
+    
+    // Lắng nghe sự kiện storage để cập nhật khi API key thay đổi
+    window.addEventListener('storage', checkAPIKey);
+    return () => window.removeEventListener('storage', checkAPIKey);
   }, []);
 
   const handleApiKeySet = (provider: 'openai' | 'gemini', apiKey: string) => {
@@ -603,25 +612,38 @@ export default function ChatInterface() {
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-banking-blue/5">
       <Header onShowAIConfig={() => setShowAIConfig(!showAIConfig)} />
       
-      {/* AI Configuration Panel */}
-      {showAIConfig && (
-        <div className="bg-white border-b border-banking-blue/20 shadow-sm">
-          <div className="container mx-auto px-4 py-4 max-w-6xl">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-banking-blue">Tích hợp AI Engine</h2>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setShowAIConfig(false)}
-                className="text-muted-foreground hover:text-banking-blue"
-              >
-                Đóng
-              </Button>
+          {/* AI Configuration Panel */}
+          {showAIConfig && (
+            <div className="bg-white border-b border-banking-blue/20 shadow-sm">
+              <div className="container mx-auto px-4 py-4 max-w-6xl">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold text-banking-blue">Tích hợp AI Engine</h2>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setShowAIConfig(false)}
+                    className="text-muted-foreground hover:text-banking-blue"
+                  >
+                    Đóng
+                  </Button>
+                </div>
+                <AIIntegration />
+              </div>
             </div>
-            <AIIntegration />
-          </div>
-        </div>
-      )}
+          )}
+
+          {/* API Key Setup Dialog */}
+          <Dialog open={showAPIKeySetup} onOpenChange={setShowAPIKeySetup}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Key className="w-5 h-5" />
+                  Cấu hình API Key
+                </DialogTitle>
+              </DialogHeader>
+              <APIKeySetup onApiKeySet={handleApiKeySet} />
+            </DialogContent>
+          </Dialog>
       
       <div className="container mx-auto p-4 max-w-7xl">
         <div className="flex gap-6 h-[calc(100vh-140px)]">
