@@ -54,18 +54,16 @@ const chatScenarios: ChatScenario[] = [
     description: 'Hướng dẫn kiểm tra số dư và lịch sử giao dịch',
     initialMessage: 'Chào bạn! Tôi muốn kiểm tra số dư tài khoản của mình.',
     responses: [
-      'Xin chào! Tôi sẽ hướng dẫn bạn kiểm tra số dư tài khoản. Bạn có thể sử dụng các cách sau:',
-      '1. Internet Banking: Đăng nhập vào website tvbank.vn với tài khoản của bạn',
-      '2. Mobile Banking: Sử dụng app TV Bank trên điện thoại',
-      '3. SMS Banking: Soạn tin "SD [số tài khoản]" gửi 8168',
-      '4. ATM: Sử dụng thẻ ATM tại bất kỳ cây ATM nào của TV Bank',
-      'Bạn cần hỗ trợ thêm về cách nào cụ thể không?',
-      'Ngoài ra, bạn có thể tham khảo các sản phẩm khác của TV Bank như:',
-      '- 🌟 **Tiết kiệm online** với lãi suất ưu đãi.',
-      '- 💳 **Thẻ tín dụng** với hoàn tiền và ưu đãi mua sắm.',
-      '- 🏠 **Vay mua nhà** với thủ tục nhanh gọn.',
-      '- 🚗 **Vay mua xe**, giải ngân chỉ trong 24 giờ.',
-      'Bạn muốn tìm hiểu thêm về sản phẩm nào? Mình sẽ hỗ trợ ngay!'
+    '📄 Thông tin tài khoản:',
+    '- Số dư khả dụng: **85.320.000 VND**',
+    '🕓 Nếu bạn muốn xem lịch sử giao dịch trong 30 ngày gần nhất, hãy nhấn vào nút **"Lịch sử giao dịch"** hoặc truy cập app TV Bank.',
+    '',
+    'Ngoài ra, bạn có thể tham khảo thêm các sản phẩm nổi bật của TV Bank:',
+    '- 💰 **Tiết kiệm online**: Lãi suất cao hơn tại quầy.',
+    '- 💳 **Thẻ tín dụng hoàn tiền**: Ưu đãi đến 10%.',
+    '- 🏠 **Vay mua nhà**: Lãi suất cạnh tranh, giải ngân nhanh.',
+    '',
+    '📌 Bạn muốn được tư vấn thêm về sản phẩm nào? Mình sẵn sàng hỗ trợ!'
     ]
   },
   {
